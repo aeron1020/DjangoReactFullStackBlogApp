@@ -1,6 +1,6 @@
 from rest_framework import generics
 from .serializers import PostSerializer, UserSerializer, CommentSerializer
-from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAdminUser, DjangoModelPermissions, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAdminUser, DjangoModelPermissions, IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework import filters
 from rest_framework import permissions
 from django.db.models import Q
@@ -132,9 +132,19 @@ class PostCommentsList(generics.ListAPIView):
 class CreateComment(generics.CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAuthenticated, PostUserWritePermission]
 
+
+class CreateCommentForGuest(generics.CreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [AllowAny]
+
+    # Override perform_create to handle unauthenticated user case
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        # You can set the author name to "Anonymous" or any default value here
+        serializer.save(author_name="Guest")
+    
+    
         
         

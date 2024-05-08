@@ -3,6 +3,7 @@ import axiosInstance from "../Axios";
 
 const UserDetailsComponent = () => {
   const [userDetails, setUserDetails] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Fetch user details from the backend
@@ -16,6 +17,7 @@ const UserDetailsComponent = () => {
         });
         // Set the user details state with the response data
         setUserDetails(response.data);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching user details:", error);
       }
@@ -27,14 +29,20 @@ const UserDetailsComponent = () => {
 
   return (
     <div>
-      {userDetails ? (
-        <div>
-          <p>Username: {userDetails.user_name}</p>
-          <p>Email: {userDetails.email}</p>
-          {/* Display other user details as needed */}
-        </div>
-      ) : (
+      {isLoading ? (
         <p>Loading user details...</p>
+      ) : (
+        <div>
+          {userDetails && userDetails.user_name ? (
+            <div>
+              <p>Username: {userDetails.user_name}</p>
+              <p>Email: {userDetails.email}</p>
+              {/* Display other user details as needed */}
+            </div>
+          ) : (
+            <p>Anonymous User</p>
+          )}
+        </div>
       )}
     </div>
   );

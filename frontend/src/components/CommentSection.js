@@ -2,11 +2,28 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../Axios";
 import { Box, Typography, TextField, Button, Paper, Grid } from "@mui/material";
 
+const formatTimeDifference = (publishedDate) => {
+  const currentDate = new Date();
+  const dateDifference = currentDate - new Date(publishedDate);
+  const seconds = Math.floor(dateDifference / 1000);
+  if (seconds < 60) {
+    return "just now";
+  }
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+  }
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  }
+  const days = Math.floor(hours / 24);
+  return `${days} day${days > 1 ? "s" : ""} ago`;
+};
+
 const CommentSection = ({ postId, userIsAuthenticated, user }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
-  console.log(userIsAuthenticated);
-  console.log("userIsAuthenticated");
 
   useEffect(() => {
     if (postId) {
@@ -26,22 +43,19 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
   const handleCommentSubmit = () => {
     if (postId) {
       const commentData = {
-        postId: postId,
+        post: postId,
         content: newComment,
-        author_name: "Anonymous",
+        author_name: userIsAuthenticated ? user.user_name : "Anonymous",
       };
 
-      if (userIsAuthenticated) {
-        console.log("Authenticated!");
-        // If the user is authenticated, include the user's ID in the comment data
-        commentData.author_name = user.name;
-      }
-      // console.log("Comment Data:", user.name);
-      console.log("Comment Data:", commentData);
+      // Send a POST request to the appropriate endpoint based on user authentication
+      const endpoint = userIsAuthenticated
+        ? `/posts/${postId}/comments/create/`
+        : `/posts/${postId}/comments/create/guest/`;
 
-      // Send a POST request to the CreateComment endpoint
+      // Send the comment data to the server
       axiosInstance
-        .post(`/posts/${postId}/comments/create/`, commentData)
+        .post(endpoint, commentData)
         .then((response) => {
           // Handle the response
           console.log("Comment created successfully:", response.data);
@@ -66,10 +80,11 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
       {comments.map((comment) => (
         <Paper key={comment.id} elevation={3} sx={{ p: 2, mb: 2 }}>
           <Grid container spacing={2}>
-            {/* Display author's name and comment content */}
+            {/* Display author's name, comment content, and time ago */}
             <Grid item xs={12}>
               <Typography variant="subtitle2" color="textSecondary">
-                {comment.author_name}:
+                {comment.author_name} •{" "}
+                {formatTimeDifference(comment.created_at)}
               </Typography>
               <Typography variant="body1">{comment.content}</Typography>
             </Grid>

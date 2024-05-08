@@ -27,6 +27,5 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'post', 'author_name', 'content', 'created_at', 'replies')
         extra_kwargs = {
-            'author_name': {'required': False},  # Make author_name optional
             'replies': {'required': False},
         }
