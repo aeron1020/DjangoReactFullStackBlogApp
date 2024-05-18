@@ -1,14 +1,16 @@
 from rest_framework import generics
-from .serializers import PostSerializer, UserSerializer, CommentSerializer
+from .serializers import PostSerializer, UserSerializer, CommentSerializer, LikeSerializer
 from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAdminUser, DjangoModelPermissions, IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework import filters
 from rest_framework import permissions
 from django.db.models import Q
-from .models import Post, Comment
+from .models import Post, Comment, Like
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import NewUser
+from django.shortcuts import get_object_or_404
+from django.contrib.sessions.models import Session
 
 
 class PostUserWritePermission(BasePermission):
@@ -63,6 +65,13 @@ class PostDetail(generics.RetrieveAPIView):
         print(user)
 
         return Post.objects.filter(slug=slug, deleted=False, status='published')
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+       
     
 
 # Rename this view to avoid conflicts
@@ -144,7 +153,100 @@ class CreateCommentForGuest(generics.CreateAPIView):
     def perform_create(self, serializer):
         # You can set the author name to "Anonymous" or any default value here
         serializer.save(author_name="Guest")
-    
-    
+
+
+# class LikeToggleView(APIView):
+#     permission_classes = [AllowAny]
+
+#     def post(self, request, *args, **kwargs):
+#         post_id = kwargs.get('pk')
+#         post = get_object_or_404(Post, pk=post_id)
+#         session_key = request.session.session_key
+#         print(session_key)
+#         if not session_key:
+#             request.session.create()
+#             session_key = request.session.session_key
+
+#         # Check if the session or user has already liked the post
+#         existing_like = Like.objects.filter(post=post, session_key=session_key)
+#         if request.user.is_authenticated:
+#             existing_like = existing_like | Like.objects.filter(post=post, user=request.user)
+
+#         if existing_like.exists():
+#             # Unlike the post
+#             existing_like.delete()
+#             post.likes_count -= 1
+#             post.save()
+#             return Response({
+#                 'detail': 'Post unliked successfully.',
+#                 'likes_count': post.likes_count,
+#                 'is_liked': False
+#             }, status=status.HTTP_200_OK)
+#         else:
+#             # Like the post
+#             like = Like(post=post, session_key=session_key)
+#             if request.user.is_authenticated:
+#                 like.user = request.user
+#             like.save()
+#             post.likes_count += 1
+#             post.save()
+#             return Response({
+#                 'detail': 'Post liked successfully.',
+#                 'likes_count': post.likes_count,
+#                 'is_liked': True
+#             }, status=status.HTTP_201_CREATED)
         
-        
+class LikeToggleView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        post_id = kwargs.get('pk')
+        post = get_object_or_404(Post, pk=post_id)
+
+        initial_session_key = request.session.session_key
+
+        print(f"Session Key: {initial_session_key}")
+
+        existing_like = Like.objects.filter(post=post, session_key=initial_session_key)
+        if request.user.is_authenticated:
+            existing_like = existing_like | Like.objects.filter(post=post, user=request.user)
+
+        if existing_like.exists():
+            existing_like.delete()
+            post.likes_count -= 1
+            post.save()
+            return Response({
+                'detail': 'Post unliked successfully.',
+                'likes_count': post.likes_count,
+                'is_liked': False,
+                'session_key': initial_session_key 
+            }, status=status.HTTP_200_OK)
+        else:
+            like = Like(post=post, session_key=initial_session_key)
+            if request.user.is_authenticated:
+                like.user = request.user
+            like.save()
+            post.likes_count += 1
+            post.save()
+            return Response({
+                'detail': 'Post liked successfully.',
+                'likes_count': post.likes_count,
+                'is_liked': True,
+                'session_key': initial_session_key 
+            }, status=status.HTTP_201_CREATED)
+
+
+
+from django.http import JsonResponse
+
+def set_session_data(request):
+    # The session key will always be available at this point
+    session_key = request.session.session_key
+    request.session['data'] = 'This is session data'
+    return JsonResponse({'message': f'Session data set with session key {session_key}', 'session_key': session_key })
+
+def get_session_data(request):
+    # The session key will always be available at this point
+    session_key = request.session.session_key
+    data = request.session.get('data', 'No data found')
+    return JsonResponse({'data': data, 'session_key': session_key})

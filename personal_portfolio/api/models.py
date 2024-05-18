@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
@@ -32,6 +33,14 @@ class Post(models.Model):
     status = models.CharField(max_length=10, choices=options, default='published')
     # Add deleted flag
     deleted = models.BooleanField(default=False)
+    # like counts
+    likes_count = models.PositiveIntegerField(default=0)
+
+    def user_has_liked(self, user):
+        if user.is_authenticated:
+            return Like.objects.filter(post=self, user=user).exists()
+        return False
+    
     # default manager
     objects = models.Manager()
     # custom manager
@@ -44,16 +53,6 @@ class Post(models.Model):
     def __str__(self):
         return self.title
     
-
-# class Comment(models.Model):
-#     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-#     author_name = models.CharField(max_length=100, blank=True)  # Allow non-authenticated users to add a name
-#     content = models.TextField()
-#     created_at = models.DateTimeField(default=timezone.now)
-
-#     def __str__(self):
-#         return f"Comment by {self.author_name} on {self.post.title}"
-    
     
 class Comment(models.Model):
     content = models.TextField()
@@ -61,3 +60,18 @@ class Comment(models.Model):
     post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='comments')
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     created_at = models.DateTimeField(default=timezone.now)
+
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    session_key = models.CharField(max_length=40, null=False, blank=True, default='')
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = ['post', 'user', 'session_key']
+
+    def __str__(self):
+        if self.user:
+            return f'{self.user.user_name} likes {self.post.title}'
+        return f'Session {self.session_key} likes {self.post.title}'

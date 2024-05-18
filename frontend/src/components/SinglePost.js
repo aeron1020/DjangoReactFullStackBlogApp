@@ -129,6 +129,8 @@ import {
 } from "@mui/material";
 import CommentSection from "./CommentSection";
 
+import LikePostButton from "./LikePostButton";
+
 const PostRead = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
@@ -146,7 +148,7 @@ const PostRead = () => {
       .catch((error) => {
         console.error("Error fetching current user:", error);
         setUserIsAuthenticated(false);
-        setUser(null);
+        setUser("Guest User");
       });
   }, []);
 
@@ -162,7 +164,7 @@ const PostRead = () => {
         setPost(null);
       });
   }, [slug]);
-
+  console.log(userIsAuthenticated, user);
   return (
     <Container>
       <Grid container>
@@ -192,6 +194,13 @@ const PostRead = () => {
                 <Typography variant="h2" gutterBottom>
                   {post.title}
                 </Typography>
+                <LikePostButton
+                  postId={post.id}
+                  liked={post.liked_by_user} // Add a field in your backend response to indicate if the user has liked the post
+                  initialLikeCount={post.likes_count}
+                  isAuthenticated={post.userisAuthenticated}
+                />
+
                 {/* Author */}
                 {post.author && (
                   <Typography
@@ -202,6 +211,7 @@ const PostRead = () => {
                     By {post.author.user_name}
                   </Typography>
                 )}
+
                 {/* Content */}
                 <Typography
                   variant="body1"
@@ -215,6 +225,7 @@ const PostRead = () => {
                     post.content
                   )}
                 </Typography>
+
                 {/* Render comment section */}
                 <CommentSection
                   postId={post.id}

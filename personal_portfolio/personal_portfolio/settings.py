@@ -59,19 +59,41 @@ REST_FRAMEWORK = {
 }
 
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
+    'api.session_middleware.EnsureSessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
    
 ]
+
+# Use database-backed sessions
+SESSION_ENGINE = 'django.contrib.sessions.backends.db' #'django.contrib.sessions.backends.cached_db'
+
+# Ensure session cookies are properly configured
+SESSION_COOKIE_NAME = 'sessionid'  # Default name for the session cookie
+SESSION_COOKIE_AGE = 1209600  # Session cookie age in seconds (2 weeks by default)
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript from accessing the session cookie
+SESSION_SAVE_EVERY_REQUEST = True  # Set to True if you want to save the session on every request
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Set to True if you want sessions to expire when the browser closes
+SESSION_COOKIE_SAMESITE = 'None'
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+
+# CSRF settings
+CSRF_COOKIE_NAME = "csrftoken"
+CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000",]
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = False 
 
 ROOT_URLCONF = 'personal_portfolio.urls'
 
@@ -79,12 +101,13 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000'
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+
 CORS_ALLOW_HEADERS = [
     'Content-Type',
     'Authorization',
 ]
-
-CORS_ALLOW_CREDENTIALS = True
 
 
 # CUSTOM USER MODEL
