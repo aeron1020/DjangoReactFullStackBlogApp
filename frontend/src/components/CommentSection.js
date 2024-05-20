@@ -1,33 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../Axios";
 import { Box, Typography, TextField, Button, Paper, Grid } from "@mui/material";
-
-const formatTimeDifference = (publishedDate) => {
-  const currentDate = new Date();
-  const dateDifference = currentDate - new Date(publishedDate);
-  const seconds = Math.floor(dateDifference / 1000);
-  if (seconds < 60) {
-    return "just now";
-  }
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) {
-    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-  }
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) {
-    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-  }
-  const days = Math.floor(hours / 24);
-  return `${days} day${days > 1 ? "s" : ""} ago`;
-};
+import { useTheme } from "@mui/material/styles";
 
 const CommentSection = ({ postId, userIsAuthenticated, user }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyContent, setReplyContent] = useState("");
+
+  const theme = useTheme();
 
   useEffect(() => {
     if (postId) {
-      // Fetch comments associated with the post
       axiosInstance
         .get(`/posts/${postId}/comments/`)
         .then((response) => {
@@ -45,30 +30,138 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
       const commentData = {
         post: postId,
         content: newComment,
-        author_name: userIsAuthenticated ? user.user_name : "Anonymous",
+        author_name: userIsAuthenticated ? user.user_name : "Guest",
       };
 
-      // Send a POST request to the appropriate endpoint based on user authentication
       const endpoint = userIsAuthenticated
         ? `/posts/${postId}/comments/create/`
         : `/posts/${postId}/comments/create/guest/`;
 
-      // Send the comment data to the server
       axiosInstance
         .post(endpoint, commentData)
         .then((response) => {
-          // Handle the response
-          console.log("Comment created successfully:", response.data);
-          // Update the comments state with the newly created comment
           setComments([...comments, response.data]);
-          // Clear the newComment state
           setNewComment("");
         })
         .catch((error) => {
-          // Handle errors
           console.error("Error creating comment:", error);
         });
     }
+  };
+
+  const handleReplyClick = (comment) => {
+    setReplyingTo(comment);
+    setReplyContent("");
+  };
+
+  const handleReplySubmit = () => {
+    if (postId && replyingTo) {
+      const replyData = {
+        post: postId,
+        content: replyContent,
+        author_name: userIsAuthenticated ? user.user_name : "Guest",
+        parent: replyingTo.id,
+      };
+
+      const endpoint = userIsAuthenticated
+        ? `/posts/${postId}/comments/create/`
+        : `/posts/${postId}/comments/create/guest/`;
+
+      axiosInstance
+        .post(endpoint, replyData)
+        .then((response) => {
+          setComments([...comments, response.data]);
+          setReplyingTo(null);
+          setReplyContent("");
+        })
+        .catch((error) => {
+          console.error("Error creating reply:", error);
+        });
+    }
+  };
+
+  const groupCommentsByParent = (comments) => {
+    const groupedComments = {};
+    comments.forEach((comment) => {
+      if (comment.parent) {
+        if (!groupedComments[comment.parent]) {
+          groupedComments[comment.parent] = [];
+        }
+        groupedComments[comment.parent].push(comment);
+      } else {
+        if (!groupedComments[comment.id]) {
+          groupedComments[comment.id] = [];
+        }
+      }
+    });
+    return groupedComments;
+  };
+
+  const renderComments = (comments, parentId = null, level = 0) => {
+    return comments
+      .filter((comment) => comment.parent === parentId)
+      .map((comment) => {
+        const formattedDate = new Date(comment.created_at).toLocaleDateString(
+          "en-US",
+          { year: "numeric", month: "long", day: "numeric" }
+        );
+
+        return (
+          <Box key={comment.id} ml={level * 2}>
+            <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1" color="textSecondary">
+                    {comment.author_name}:
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {formattedDate}
+                  </Typography>
+                  <Typography variant="body1">{comment.content}</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  {!comment.parent && (
+                    <Button
+                      sx={{
+                        color: theme.palette.primary.text,
+                        textTransform: "none",
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.main, // Change the background color on hover
+                        },
+                      }}
+                      onClick={() => handleReplyClick(comment)}
+                    >
+                      Reply
+                    </Button>
+                  )}
+                </Grid>
+              </Grid>
+            </Paper>
+            {replyingTo && replyingTo.id === comment.id && (
+              <Box ml={2} mb={2}>
+                <TextField
+                  label="Add a reply"
+                  variant="outlined"
+                  fullWidth
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                  multiline
+                  rows={2}
+                  margin="normal"
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleReplySubmit}
+                >
+                  Post Reply
+                </Button>
+              </Box>
+            )}
+            {renderComments(comments, comment.id, level + 1)}
+          </Box>
+        );
+      });
   };
 
   return (
@@ -76,28 +169,7 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
       <Typography variant="h5" gutterBottom>
         Comments
       </Typography>
-      {/* Display existing comments */}
-      {comments.map((comment) => (
-        <Paper key={comment.id} elevation={3} sx={{ p: 2, mb: 2 }}>
-          <Grid container spacing={2}>
-            {/* Display author's name, comment content, and time ago */}
-            <Grid item xs={12}>
-              <Typography variant="subtitle2" color="textSecondary">
-                {comment.author_name} •{" "}
-                {formatTimeDifference(comment.created_at)}
-              </Typography>
-              <Typography variant="body1">{comment.content}</Typography>
-            </Grid>
-            {/* Reply button */}
-            <Grid item xs={12}>
-              <Button variant="outlined" color="primary">
-                Reply
-              </Button>
-            </Grid>
-          </Grid>
-        </Paper>
-      ))}
-      {/* Comment input field */}
+      {renderComments(comments)}
       <TextField
         label="Add a comment"
         variant="outlined"
@@ -108,7 +180,6 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
         rows={4}
         margin="normal"
       />
-      {/* Submit button */}
       <Button variant="contained" color="primary" onClick={handleCommentSubmit}>
         Post Comment
       </Button>

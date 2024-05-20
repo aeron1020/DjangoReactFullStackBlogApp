@@ -32,7 +32,7 @@ class PostSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('id', 'post', 'author_name', 'content', 'created_at', 'replies')
+        fields = ('id', 'post', 'author_name', 'content', 'created_at', 'parent')
         extra_kwargs = {
             'replies': {'required': False},
         }
