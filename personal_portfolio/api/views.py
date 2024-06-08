@@ -1,16 +1,16 @@
 from rest_framework import generics
-from .serializers import PostSerializer, UserSerializer, CommentSerializer, LikeSerializer
+from .serializers import PostSerializer, UserSerializer, CommentSerializer, ProjectSerializer, CategorySerializer
 from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAdminUser, DjangoModelPermissions, IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework import filters
 from rest_framework import permissions
 from django.db.models import Q
-from .models import Post, Comment, Like
+from .models import Post, Comment, Like, Project, Category
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from users.models import NewUser
 from django.shortcuts import get_object_or_404
-from django.contrib.sessions.models import Session
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class PostUserWritePermission(BasePermission):
@@ -36,18 +36,24 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
         # Return the user associated with the current request
         return self.request.user
 
+class CategoryList(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.AllowAny]
 
 class PostList(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = PostSerializer
     # queryset = Post.objects.all()
 
-    def get_queryset(self):
-        return Post.objects.filter(Q(deleted=False) & Q(status='published'))
-
     # def get_queryset(self):
-    #     user = self.request.user
-    #     return Post.objects.filter(author=user)
+    #     return Post.objects.filter(Q(deleted=False) & Q(status='published'))
+    def get_queryset(self):
+        queryset = Post.objects.filter(deleted=False, status='published')
+        category_id = self.request.query_params.get('category', None)
+        if category_id:
+            queryset = queryset.filter(category__id=category_id)
+        return queryset
 
 
 class PostDetail(generics.RetrieveAPIView):
@@ -94,10 +100,14 @@ class CreatePost(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    parser_classes = (MultiPartParser, FormParser) 
 
     def perform_create(self, serializer):
+        category_id = self.request.data.get('category')
+        category = get_object_or_404(Category, pk=category_id)
         # Set the author of the post to the current user
-        serializer.save(author=self.request.user)
+        # serializer.save(author=self.request.user)
+        serializer.save(author=self.request.user, category=category)
         
 class AdminPostDetails(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
@@ -144,6 +154,8 @@ class CreateComment(generics.CreateAPIView):
     permission_classes = [IsAuthenticated, PostUserWritePermission]
 
 
+from django.utils.crypto import get_random_string
+
 class CreateCommentForGuest(generics.CreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -151,17 +163,21 @@ class CreateCommentForGuest(generics.CreateAPIView):
 
     # Override perform_create to handle unauthenticated user case
     def perform_create(self, serializer):
-        # You can set the author name to "Anonymous" or any default value here
-        serializer.save(author_name="Guest")
+        # Get the session key
+        session_key = self.request.session.session_key
+        
+        # If session key exists, use its first 4 characters as the guest name
+        if session_key:
+            guest_name = session_key[:4]
+            print("gname", guest_name)
+        else:
+            # If session key doesn't exist (unlikely case), generate a random string
+            guest_name = get_random_string(4)
+            print(guest_name)
 
-class CommentReplyCreateView(generics.CreateAPIView):
-    serializer_class = CommentSerializer
-    permission_classes = [AllowAny]
+        # Set the author name to the guest name
+        serializer.save(author_name="Guest-" + guest_name)
 
-    def perform_create(self, serializer):
-        parent_id = self.kwargs['parent_id']
-        post_id = Comment.objects.get(id=parent_id).post.id
-        serializer.save(parent_id=parent_id, post_id=post_id)
 
         
 class LikeToggleView(APIView):
@@ -202,3 +218,54 @@ class LikeToggleView(APIView):
                 'is_liked': True,
                 'session_key': initial_session_key 
             }, status=status.HTTP_201_CREATED)
+        
+
+
+
+class ProjectUserWritePermission(permissions.BasePermission):
+    message = 'Editing projects is restricted to the author only.'
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.author == request.user
+    
+class ProjectsList(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ProjectSerializer
+   
+    def get_queryset(self):
+        return Project.objects.filter(Q(status='published'))
+
+class CreateProject(generics.CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class AdminProjectDetails(generics.RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
+
+class EditProject(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated, ProjectUserWritePermission]
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+class DeleteProject(generics.RetrieveDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated, ProjectUserWritePermission]
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
+
+    def perform_destroy(self, instance):
+        instance.is_deleted = True
+        instance.save()
+

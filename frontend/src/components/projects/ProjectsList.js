@@ -16,7 +16,6 @@ const useStyles = styled((theme) => ({
   },
   cardMedia: {
     paddingTop: "100%", // 16:9
-    // objectFit: "cover",
   },
   link: {
     margin: theme.spacing(1, 1.5),
@@ -27,11 +26,11 @@ const useStyles = styled((theme) => ({
         ? theme.palette.grey[200]
         : theme.palette.grey[700],
   },
-  postTitle: {
+  projectTitle: {
     fontSize: "24px",
     textAlign: "left",
   },
-  postText: {
+  projectText: {
     display: "flex",
     justifyContent: "left",
     alignItems: "baseline",
@@ -41,20 +40,21 @@ const useStyles = styled((theme) => ({
   },
 }));
 
-const Posts = (props) => {
+const ProjectsList = (props) => {
   const theme = useTheme();
-  const { posts } = props;
+  const { projects } = props;
   const classes = useStyles();
-  if (!posts || posts.length === 0)
-    return <p>Can not find any posts, sorry.</p>;
+  if (!projects || projects.length === 0)
+    return <p>Can not find any projects, sorry.</p>;
+
   return (
     <React.Fragment>
       <Container maxWidth="md" component="main">
         <Grid container spacing={2}>
-          {posts.map((post) => (
+          {projects.map((project) => (
             <Grid
               item
-              key={post.id}
+              key={project.id}
               xs={12}
               sm={6}
               sx={{
@@ -63,7 +63,7 @@ const Posts = (props) => {
               }}
             >
               <Link
-                to={`/posts/${post.slug}`}
+                to={`/projects/${project.slug}`}
                 className={classes.link}
                 style={{ textDecoration: "none" }}
               >
@@ -82,7 +82,7 @@ const Posts = (props) => {
                         <CardMedia
                           className={classes.cardMedia}
                           component="img"
-                          image="https://source.unsplash.com/random"
+                          image={project.head_image}
                           title="Image title"
                           sx={{
                             border: `1px solid ${theme.palette.primary.border}`,
@@ -94,13 +94,13 @@ const Posts = (props) => {
                           gutterBottom
                           variant="h6"
                           component="h2"
-                          className={classes.postTitle}
+                          className={classes.projectTitle}
                           sx={{
                             textAlign: "left",
                             color: theme.palette.primary.text,
                           }}
                         >
-                          {post.title}
+                          {project.title}
                         </Typography>
 
                         <Typography
@@ -112,7 +112,7 @@ const Posts = (props) => {
                             color: theme.palette.primary.text,
                           }}
                         >
-                          {post.content.substr(0, 70)}...
+                          {project.description.substr(0, 70)}...
                         </Typography>
                         <Typography
                           variant="body2"
@@ -120,7 +120,7 @@ const Posts = (props) => {
                           component="p"
                           sx={{ textAlign: "left" }}
                         >
-                          {formatTimeDifference(post.published)}{" "}
+                          {formatTimeDifference(project.published)}{" "}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -135,7 +135,7 @@ const Posts = (props) => {
   );
 };
 
-export default Posts;
+export default ProjectsList;
 
 const formatTimeDifference = (publishedDate) => {
   const currentDate = new Date();

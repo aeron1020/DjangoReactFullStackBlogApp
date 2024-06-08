@@ -95,61 +95,63 @@ export default function SignUp() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <div>
-        <Typography component="h1" variant="h5">
-          Sign Up
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={2} sx={{ marginTop: "1px" }}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                variant="outlined"
-                onChange={handleChange}
-                required
-                error={!!emailError}
-                helperText={emailError}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Username"
-                name="username"
-                variant="outlined"
-                onChange={handleChange}
-                required
-                error={!!usernameError}
-                helperText={usernameError}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Password"
-                name="password"
-                type="password"
-                variant="outlined"
-                onChange={handleChange}
-                required
-                error={!!passwordError}
-                helperText={passwordError}
-              />
-            </Grid>
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{ marginBottom: "1rem", marginTop: "1rem" }}
+    >
+      <Typography component="h1" variant="h5">
+        Sign Up
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={2} sx={{ marginTop: "1px" }}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Email"
+              name="email"
+              variant="outlined"
+              onChange={handleChange}
+              required
+              error={!!emailError}
+              helperText={emailError}
+            />
           </Grid>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ marginTop: "1rem" }}
-          >
-            Sign Up
-          </Button>
-        </form>
-      </div>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Username"
+              name="username"
+              variant="outlined"
+              onChange={handleChange}
+              required
+              error={!!usernameError}
+              helperText={usernameError}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Password"
+              name="password"
+              type="password"
+              variant="outlined"
+              onChange={handleChange}
+              required
+              error={!!passwordError}
+              helperText={passwordError}
+            />
+          </Grid>
+        </Grid>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          sx={{ marginTop: "1rem", marginButtom: "1rem" }}
+        >
+          Sign Up
+        </Button>
+      </form>
     </Container>
   );
 }

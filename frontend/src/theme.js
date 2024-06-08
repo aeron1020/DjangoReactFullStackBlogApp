@@ -1,33 +1,45 @@
-// themes.js
 import { createTheme } from "@mui/material";
 
 export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#D5E7F2",
-      text: "#223A59",
-      button: "#AFBF36",
-      border: "#223A59",
+      main: "#E0E0E5", // Gray
+      text: "#333", // Black
+      button: "#007AFF", // Highlighter color for buttons (Blue)
+      border: "#34C759", // Highlighter color for borders (Green)
     },
     secondary: {
-      main: "#91A672",
+      main: "#FF9500", // Orange
     },
     background: {
-      default: "#D5E7F2",
+      default: "#F2F2F7", // Light Gray Background
     },
   },
   typography: {
-    fontFamily: "Roboto, sans-serif",
+    fontFamily:
+      "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif", //font
     h1: {
-      fontSize: "2.5rem",
+      fontSize: "2rem",
       fontWeight: 600,
-      color: "#223A59",
+      color: "#333",
     },
     h2: {
-      fontSize: "2rem",
+      fontSize: "1.5rem",
       fontWeight: 500,
-      color: "#121212",
+      color: "#333",
+    },
+  },
+  components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          "@media (min-width: 600px)": {
+            paddingLeft: 0,
+            paddingRight: 0,
+          },
+        },
+      },
     },
   },
 });
@@ -36,29 +48,41 @@ export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#223A59",
-      text: "#D5E7F2",
-      button: "#AFBF36",
-      border: "#CDD977",
+      main: "#0A0A0A", // Gray
+      text: "#F2F2F7", // White
+      button: "#007AFF", // Highlighter color for buttons (Blue)
+      border: "#34C759", // Highlighter color for borders (Green)
     },
     secondary: {
-      main: "#AFBF36",
+      main: "#FF9500", //Orange
     },
     background: {
-      default: "#223A59",
+      default: "#1C1C1E", // Dark Background
     },
   },
   typography: {
-    fontFamily: "Roboto, sans-serif",
+    fontFamily: "SF Pro, sans-serif", //font
     h1: {
-      fontSize: "2.5rem",
+      fontSize: "2rem",
       fontWeight: 600,
-      color: "#CDD977",
+      color: "#F2F2F7",
     },
     h2: {
-      fontSize: "2rem",
+      fontSize: "1.5rem",
       fontWeight: 500,
-      color: "#fff",
+      color: "#F2F2F7",
+    },
+  },
+  components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          "@media (min-width: 600px)": {
+            paddingLeft: 0,
+            paddingRight: 0,
+          },
+        },
+      },
     },
   },
 });

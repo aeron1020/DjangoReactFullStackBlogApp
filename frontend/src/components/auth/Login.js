@@ -43,7 +43,11 @@ const Login = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      maxWidth="xs"
+      sx={{ marginBottom: "1rem", marginTop: "1rem" }}
+    >
       <Box>
         <Typography variant="h6" gutterBottom>
           Login

@@ -21,8 +21,8 @@ function Footer() {
         px: 2,
         mt: "auto",
         textAlign: "center",
-        color: theme.palette.primary.main,
-        backgroundColor: theme.palette.primary.text,
+        color: theme.palette.primary.text, // Use primary text color
+        backgroundColor: theme.palette.primary.main, // Use primary background color
       }}
     >
       <Typography variant="body2" color="inherit">

@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.utils.text import slugify
 
 
 class Category(models.Model):
@@ -22,7 +23,7 @@ class Post(models.Model):
     options = (('draft', 'Draft'), 
                ('published', 'Published')) # for the status
 
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
+    category = models.ForeignKey("Category", on_delete=models.PROTECT, default=1)
     head_image = models.ImageField(upload_to='post_images/', null=True, blank=True)
     title = models.CharField(max_length=250)
     excerpt = models.TextField(null=True)
@@ -75,3 +76,24 @@ class Like(models.Model):
         if self.user:
             return f'{self.user.user_name} likes {self.post.title}'
         return f'Session {self.session_key} likes {self.post.title}'
+    
+
+class Project(models.Model):
+    project_title = models.CharField(max_length=250)
+    description = models.TextField()
+    status = models.CharField(max_length=10, choices=[('draft', 'Draft'), ('published', 'Published')], default='draft')
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.project_title)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.project_title
+    
+    
+    

@@ -7,6 +7,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Axios";
@@ -16,6 +18,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const Delete = ({ postId }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   const navigate = useNavigate();
 
   const handleOpen = () => {
@@ -26,15 +31,26 @@ const Delete = ({ postId }) => {
     setOpen(false);
   };
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   const handleDelete = async () => {
     try {
-      await axiosInstance.delete(`/admin/delete-post/${postId}`);
-      console.log("deletion sucdess");
-      navigate("/admin"); // Redirect to admin page after successful deletion
-      window.location.reload(); // Reload the page
+      await axiosInstance.delete(`/admin/delete-post/${postId}/`);
+      console.log("Deletion successful");
+      setSnackbarMessage("Post deleted successfully.");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      // Redirect to admin page after successful deletion
+      navigate("/admin");
     } catch (error) {
       console.error("Error deleting post:", error);
+      setSnackbarMessage("Error deleting post.");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
     }
+    handleClose();
   };
 
   return (
@@ -43,11 +59,31 @@ const Delete = ({ postId }) => {
         variant="contained"
         onClick={handleOpen}
         endIcon={<DeleteIcon />}
-        // sx={{ backgroundColor: theme.palette.primary.button }}
+        sx={{
+          backgroundColor: theme.palette.primary.text,
+          color: theme.palette.primary.main,
+          fontFamily: theme.typography.fontFamily,
+          textTransform: "none",
+          mb: { xs: 1, md: 0 },
+          mr: { xs: 0, md: 1 },
+
+          "&:hover": {
+            backgroundColor: theme.palette.primary.button,
+          },
+        }}
       >
-        Deletes
+        Delete
       </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            backgroundColor: theme.palette.background.default,
+            color: theme.palette.primary.text,
+          },
+        }}
+      >
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -59,7 +95,12 @@ const Delete = ({ postId }) => {
           <Button
             onClick={handleClose}
             sx={{
-              color: theme.palette.primary.text,
+              color: theme.palette.primary.main,
+              backgroundColor: theme.palette.primary.text,
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: theme.palette.primary.button,
+              },
             }}
           >
             Cancel
@@ -68,13 +109,31 @@ const Delete = ({ postId }) => {
             onClick={handleDelete}
             autoFocus
             sx={{
-              color: theme.palette.primary.text,
+              color: theme.palette.primary.main,
+              backgroundColor: theme.palette.primary.text,
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: theme.palette.primary.button,
+              },
             }}
           >
             Delete
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

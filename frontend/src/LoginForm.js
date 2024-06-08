@@ -21,7 +21,7 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
 
     axiosInstance
       .post(`token/`, {
@@ -40,7 +40,7 @@ const LoginForm = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xl">
       <Box>
         <Typography variant="h6" gutterBottom>
           Login
@@ -62,11 +62,17 @@ const LoginForm = () => {
             onChange={handleChange}
             required
           />
-          <Button type="submit" fullWidth variant="contained">
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ margin: 2 }}
+          >
             Login
           </Button>
         </form>
       </Box>
+      <Box sx={{ margin: 40 }}></Box>
     </Container>
   );
 };

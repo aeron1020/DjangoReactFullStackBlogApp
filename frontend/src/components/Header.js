@@ -9,15 +9,17 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { Link } from "react-router-dom";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useTheme } from "@mui/material/styles";
+import SwitchTheme from "./SwitchTheme";
+import Logo from "./Logo";
 
-function Header() {
+function Header({ darkMode, handleThemeChange }) {
   const theme = useTheme(); // Access the current theme
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElProfile, setAnchorElProfile] = React.useState(null);
+  const [showHeader, setShowHeader] = React.useState(true);
   const isAuthenticated = localStorage.getItem("access_token");
 
   const handleOpenNavMenu = (event) => {
@@ -36,21 +38,60 @@ function Header() {
     setAnchorElProfile(null);
   };
 
+  React.useEffect(() => {
+    let lastScrollTop = 0;
+
+    const handleScroll = () => {
+      const currentScrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+      if (currentScrollTop > lastScrollTop) {
+        // Scrolling down
+        setShowHeader(false);
+      } else {
+        // Scrolling up
+        setShowHeader(true);
+      }
+      lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <AppBar
       position="sticky"
-      sx={{ backgroundColor: theme.palette.primary.main }}
+      sx={{
+        height: 44,
+        justifyContent: "center",
+        backgroundColor: `${theme.palette.primary.main}cc`,
+        backdropFilter: "blur(5px)",
+        transition: "transform 0.3s ease-in-out",
+        transform: showHeader ? "translateY(0)" : "translateY(-100%)",
+        paddingRight: 5,
+        paddingLeft: 5,
+      }}
     >
-      {" "}
-      {/* Apply background color based on theme */}
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon
+          <Box
+            to="/"
+            component={Link}
             sx={{
               display: { xs: "none", md: "flex" },
               mr: 1,
+              background: "linear-gradient(to right, #AEAEAE, #777777)",
+              borderTopLeftRadius: 12,
+              borderTopRightRadius: 12,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
             }}
-          />
+          >
+            <Logo sx={{ height: 32 }} />
+          </Box>
 
           {/* Desktop or larger view */}
           <Typography
@@ -61,11 +102,13 @@ function Header() {
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
+              fontFamily:
+                "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+              fontSize: 16,
+              fontWeight: 400,
+              letterSpacing: "-.01em",
               textDecoration: "none",
-              color: theme.palette.primary.text, // Use primary text color
+              color: theme.palette.primary.text,
             }}
           >
             OlsenAeron
@@ -109,25 +152,78 @@ function Header() {
                 component={Link}
                 to="/posts"
               >
-                Posts
+                <Typography
+                  sx={{
+                    fontFamily:
+                      "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+                    fontSize: 12,
+                    fontWeight: 400,
+                    letterSpacing: "-.01em",
+                  }}
+                >
+                  Posts
+                </Typography>
               </MenuItem>
               <MenuItem
                 onClick={handleCloseNavMenu}
                 component={Link}
                 to="/projects"
               >
-                Projects
+                <Typography
+                  sx={{
+                    fontFamily:
+                      "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+                    fontSize: 12,
+                    fontWeight: 400,
+                    letterSpacing: "-.01em",
+                  }}
+                >
+                  Projects
+                </Typography>
               </MenuItem>
               {isAuthenticated && (
                 <>
                   <MenuItem onClick={handleOpenProfileMenu}>
-                    Profile <ArrowDropDownIcon />
+                    <Typography
+                      sx={{
+                        fontFamily:
+                          "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+                        fontSize: 12,
+                        fontWeight: 400,
+                        letterSpacing: "-.01em",
+                      }}
+                    >
+                      Profile
+                    </Typography>{" "}
+                    <ArrowDropDownIcon />
                   </MenuItem>
                 </>
               )}
+              <MenuItem>
+                <SwitchTheme
+                  checked={darkMode}
+                  onChange={handleThemeChange}
+                  sx={{ color: theme.palette.primary.main }}
+                />
+              </MenuItem>
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <Box
+            to="/"
+            component={Link}
+            sx={{
+              display: { xs: "flex", md: "none" },
+              mr: 1,
+              background: "linear-gradient(to right, #AEAEAE, #777777)",
+              borderTopLeftRadius: 12,
+              borderTopRightRadius: 12,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+            }}
+          >
+            <Logo sx={{ height: 32 }} />
+          </Box>
+
           <Typography
             variant="h5"
             noWrap
@@ -137,9 +233,11 @@ function Header() {
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
+              fontFamily:
+                "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+              fontWeight: 400,
+              letterSpacing: "-.01em",
+              fontSize: 16,
               color: theme.palette.primary.text,
               textDecoration: "none",
             }}
@@ -159,7 +257,21 @@ function Header() {
               to="/posts"
               sx={{ color: theme.palette.primary.text }}
             >
-              <Typography>Posts</Typography>
+              <Typography
+                sx={{
+                  mr: 2,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily:
+                    "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+                  fontSize: 12,
+                  fontWeight: 400,
+                  letterSpacing: "-.01em",
+                  textDecoration: "none",
+                  color: theme.palette.primary.text,
+                }}
+              >
+                Posts
+              </Typography>
             </Button>
             <Button
               onClick={handleCloseNavMenu}
@@ -167,7 +279,21 @@ function Header() {
               to="/projects"
               sx={{ color: theme.palette.primary.text }}
             >
-              Projects
+              <Typography
+                sx={{
+                  mr: 2,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily:
+                    "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+                  fontSize: 12,
+                  fontWeight: 400,
+                  letterSpacing: "-.01em",
+                  textDecoration: "none",
+                  color: theme.palette.primary.text,
+                }}
+              >
+                Project
+              </Typography>
             </Button>
             {isAuthenticated && (
               <>
@@ -175,10 +301,30 @@ function Header() {
                   onClick={handleOpenProfileMenu}
                   sx={{ color: theme.palette.primary.text }}
                 >
-                  Profile <ArrowDropDownIcon />
+                  <Typography
+                    sx={{
+                      mr: 2,
+                      display: { xs: "none", md: "flex" },
+                      fontFamily:
+                        "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+                      fontSize: 12,
+                      fontWeight: 400,
+                      letterSpacing: "-.01em",
+                      textDecoration: "none",
+                      color: theme.palette.primary.text,
+                    }}
+                  >
+                    Profile
+                  </Typography>{" "}
+                  <ArrowDropDownIcon />
                 </Button>
               </>
             )}
+            <SwitchTheme
+              checked={darkMode}
+              onChange={handleThemeChange}
+              sx={{ color: theme.palette.primary.main }}
+            />
           </Box>
         </Toolbar>
       </Container>
@@ -194,21 +340,51 @@ function Header() {
           component={Link}
           to="/admin/"
         >
-          My Posts
+          <Typography
+            sx={{
+              fontFamily:
+                "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+              fontSize: 12,
+              fontWeight: 400,
+              letterSpacing: "-.01em",
+            }}
+          >
+            My Posts
+          </Typography>
         </MenuItem>
         <MenuItem
           onClick={handleCloseProfileMenu}
           component={Link}
           to="/settings"
         >
-          Settings
+          <Typography
+            sx={{
+              fontFamily:
+                "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+              fontSize: 12,
+              fontWeight: 400,
+              letterSpacing: "-.01em",
+            }}
+          >
+            Settings
+          </Typography>
         </MenuItem>
         <MenuItem
           onClick={handleCloseProfileMenu}
           component={Link}
           to="/logout"
         >
-          Logout
+          <Typography
+            sx={{
+              fontFamily:
+                "SF Pro Text,SF Pro Icons,Helvetica Neue,Helvetica,Arial,sans-serif",
+              fontSize: 12,
+              fontWeight: 400,
+              letterSpacing: "-.01em",
+            }}
+          >
+            Logout
+          </Typography>
         </MenuItem>
       </Menu>
     </AppBar>

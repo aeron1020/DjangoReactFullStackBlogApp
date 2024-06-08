@@ -1,121 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import axiosInstance from "../Axios";
-// import {
-//   Box,
-//   CardMedia,
-//   Container,
-//   Grid,
-//   Paper,
-//   Typography,
-// } from "@mui/material";
-// import CommentSection from "./CommentSection";
-
-// const PostRead = () => {
-//   const { slug } = useParams();
-//   const [post, setPost] = useState(null);
-//   const [currentUser, setCurrentUser] = useState(null);
-
-//   useEffect(() => {
-//     // Fetch post details
-//     axiosInstance
-//       .get(`/posts/${slug}`)
-//       .then((response) => {
-//         setPost(response.data);
-//         // Fetch current user information
-//         axiosInstance
-//           .get("/current_user/")
-//           .then((response) => {
-//             setCurrentUser(response.data);
-//           })
-//           .catch((error) => {
-//             console.error("Error fetching current user:", error);
-//             setCurrentUser(null);
-//           });
-//         console.log("Post:", response.data);
-//       })
-//       .catch((error) => {
-//         console.error("Error fetching post:", error);
-//         setPost(null);
-//       });
-//   }, [slug]);
-
-//   return (
-//     <Container>
-//       <Grid container>
-//         {/* Left Grid */}
-//         <Grid item xs={12} md={3}>
-//           <Paper>
-//             <Typography variant="h6">Left Content</Typography>
-//             {/* Add your left content here */}
-//           </Paper>
-//         </Grid>
-
-//         {/* Center Grid */}
-//         <Grid item xs={12} md={6}>
-//           {post && (
-//             <Paper>
-//               {/* Header Image */}
-//               <CardMedia
-//                 component="img"
-//                 alt="Post Header Image"
-//                 height="200"
-//                 image="https://source.unsplash.com/random"
-//                 // image={post.header_image} // Assuming 'header_image' is the key for the image URL in the post data
-//               />
-
-//               <Box p={2}>
-//                 {/* Title */}
-//                 <Typography variant="h2" gutterBottom>
-//                   {post.title}
-//                 </Typography>
-
-//                 {/* Author */}
-//                 {post.author && (
-//                   <Typography
-//                     variant="subtitle2"
-//                     color="textSecondary"
-//                     gutterBottom
-//                   >
-//                     By {post.author.user_name}
-//                   </Typography>
-//                 )}
-
-//                 {/* Content */}
-//                 <Typography
-//                   variant="body1"
-//                   component="div"
-//                   gutterBottom
-//                   sx={{ whiteSpace: "pre-line" }}
-//                 >
-//                   {post.content.includes("<iframe") ? (
-//                     <div dangerouslySetInnerHTML={{ __html: post.content }} />
-//                   ) : (
-//                     post.content
-//                   )}
-//                 </Typography>
-//                 {/* Render comment section */}
-
-//                 <CommentSection postId={post.id} user={currentUser} />
-//               </Box>
-//             </Paper>
-//           )}
-//         </Grid>
-
-//         {/* Right Grid */}
-//         <Grid item xs={12} md={3}>
-//           <Paper>
-//             <Typography variant="h6">Right Content</Typography>
-//             {/* Add your right content here */}
-//           </Paper>
-//         </Grid>
-//       </Grid>
-//     </Container>
-//   );
-// };
-
-// export default PostRead;
-
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../Axios";
@@ -128,8 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 import CommentSection from "./CommentSection";
-
 import LikePostButton from "./LikePostButton";
+import NavigateBackButton from "./BackButton";
 
 const PostRead = () => {
   const { slug } = useParams();
@@ -155,7 +37,7 @@ const PostRead = () => {
   useEffect(() => {
     // Fetch post details
     axiosInstance
-      .get(`/posts/${slug}`)
+      .get(`/posts/${slug}/`)
       .then((response) => {
         setPost(response.data);
       })
@@ -164,15 +46,49 @@ const PostRead = () => {
         setPost(null);
       });
   }, [slug]);
-  console.log(userIsAuthenticated, user);
+
+  const renderContent = (content) => {
+    const imageUrlRegex = /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/i;
+    const iframeRegex = /<iframe.*<\/iframe>/i;
+
+    return content.split("\n").map((line, index) => {
+      if (imageUrlRegex.test(line)) {
+        return (
+          <img
+            src={line}
+            alt="Embedded content"
+            key={index}
+            style={{ maxWidth: "100%", margin: "10px 0" }}
+          />
+        );
+      } else if (iframeRegex.test(line)) {
+        return <div dangerouslySetInnerHTML={{ __html: line }} key={index} />;
+      } else {
+        return <p key={index}>{line}</p>;
+      }
+    });
+  };
+
+  const formatDate = (dateString) => {
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    };
+    return new Date(dateString).toLocaleString(undefined, options);
+  };
+
   return (
     <Container>
-      <Grid container>
+      <Grid container spacing={3}>
         {/* Left Grid */}
         <Grid item xs={12} md={3}>
           <Paper>
-            <Typography variant="h6">Left Content</Typography>
-            {/* Add your left content here */}
+            <NavigateBackButton />
+            <Typography variant="h6"></Typography>
           </Paper>
         </Grid>
 
@@ -185,8 +101,8 @@ const PostRead = () => {
                 component="img"
                 alt="Post Header Image"
                 height="200"
-                image="https://source.unsplash.com/random"
-                // image={post.header_image} // Assuming 'header_image' is the key for the image URL in the post data
+                image={post.head_image}
+                sx={{ objectFit: "cover" }} // Prevent image shrinkage
               />
 
               <Box p={2}>
@@ -194,11 +110,16 @@ const PostRead = () => {
                 <Typography variant="h2" gutterBottom>
                   {post.title}
                 </Typography>
+                <Typography variant="text" gutterBottom>
+                  {post.category.name}
+                </Typography>
+
+                {/* Like button */}
                 <LikePostButton
                   postId={post.id}
-                  liked={post.liked_by_user} // Add a field in your backend response to indicate if the user has liked the post
+                  liked={post.liked_by_user}
                   initialLikeCount={post.likes_count}
-                  isAuthenticated={post.userisAuthenticated}
+                  isAuthenticated={userIsAuthenticated}
                 />
 
                 {/* Author */}
@@ -208,23 +129,21 @@ const PostRead = () => {
                     color="textSecondary"
                     gutterBottom
                   >
-                    By {post.author.user_name}
+                    {post.author.user_name}
                   </Typography>
                 )}
+                <Typography
+                  variant="subtitle2"
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  {formatDate(post.published)}
+                </Typography>
 
                 {/* Content */}
-                <Typography
-                  variant="body1"
-                  component="div"
-                  gutterBottom
-                  sx={{ whiteSpace: "pre-line" }}
-                >
-                  {post.content.includes("<iframe") ? (
-                    <div dangerouslySetInnerHTML={{ __html: post.content }} />
-                  ) : (
-                    post.content
-                  )}
-                </Typography>
+                <Box component="div" sx={{ whiteSpace: "pre-line" }}>
+                  {renderContent(post.content)}
+                </Box>
 
                 {/* Render comment section */}
                 <CommentSection
@@ -240,8 +159,7 @@ const PostRead = () => {
         {/* Right Grid */}
         <Grid item xs={12} md={3}>
           <Paper>
-            <Typography variant="h6">Right Content</Typography>
-            {/* Add your right content here */}
+            <Typography variant="h6"></Typography>
           </Paper>
         </Grid>
       </Grid>

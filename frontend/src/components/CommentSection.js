@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../Axios";
-import { Box, Typography, TextField, Button, Paper, Grid } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Grid,
+  Divider,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { formatDistanceToNow } from "date-fns";
 
 const CommentSection = ({ postId, userIsAuthenticated, user }) => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [replyingTo, setReplyingTo] = useState(null);
   const [replyContent, setReplyContent] = useState("");
-
+  const [hiddenReplies, setHiddenReplies] = useState({});
   const theme = useTheme();
 
   useEffect(() => {
@@ -17,6 +26,12 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
         .get(`/posts/${postId}/comments/`)
         .then((response) => {
           setComments(response.data);
+          // Initialize hiddenReplies state
+          const hiddenRepliesInit = response.data.reduce((acc, comment) => {
+            acc[comment.id] = true;
+            return acc;
+          }, {});
+          setHiddenReplies(hiddenRepliesInit);
         })
         .catch((error) => {
           console.error("Error fetching comments:", error);
@@ -80,53 +95,46 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
     }
   };
 
-  const groupCommentsByParent = (comments) => {
-    const groupedComments = {};
-    comments.forEach((comment) => {
-      if (comment.parent) {
-        if (!groupedComments[comment.parent]) {
-          groupedComments[comment.parent] = [];
-        }
-        groupedComments[comment.parent].push(comment);
-      } else {
-        if (!groupedComments[comment.id]) {
-          groupedComments[comment.id] = [];
-        }
-      }
-    });
-    return groupedComments;
+  const toggleReplies = (commentId) => {
+    setHiddenReplies((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
   };
 
   const renderComments = (comments, parentId = null, level = 0) => {
     return comments
       .filter((comment) => comment.parent === parentId)
       .map((comment) => {
-        const formattedDate = new Date(comment.created_at).toLocaleDateString(
-          "en-US",
-          { year: "numeric", month: "long", day: "numeric" }
+        const childComments = comments.filter((c) => c.parent === comment.id);
+        const formattedDate = formatDistanceToNow(
+          new Date(comment.created_at),
+          {
+            addSuffix: true,
+          }
         );
 
         return (
-          <Box key={comment.id} ml={level * 2}>
-            <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
+          <Box key={comment.id} ml={level * 2} mt={2}>
+            <Paper elevation={3} sx={{ p: 2 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Typography variant="subtitle1" color="textSecondary">
-                    {comment.author_name}:
+                    {comment.author_name}
                   </Typography>
+                  <Typography variant="body1">{comment.content}</Typography>
                   <Typography variant="subtitle2" color="textSecondary">
                     {formattedDate}
                   </Typography>
-                  <Typography variant="body1">{comment.content}</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  {!comment.parent && (
+                  {level < 2 && (
                     <Button
                       sx={{
                         color: theme.palette.primary.text,
                         textTransform: "none",
                         "&:hover": {
-                          backgroundColor: theme.palette.primary.main, // Change the background color on hover
+                          backgroundColor: theme.palette.primary.main,
                         },
                       }}
                       onClick={() => handleReplyClick(comment)}
@@ -134,11 +142,27 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
                       Reply
                     </Button>
                   )}
+                  {childComments.length > 0 && (
+                    <Button
+                      sx={{
+                        color: theme.palette.primary.text,
+                        textTransform: "none",
+                        "&:hover": {
+                          backgroundColor: theme.palette.primary.main,
+                        },
+                      }}
+                      onClick={() => toggleReplies(comment.id)}
+                    >
+                      {hiddenReplies[comment.id]
+                        ? `Show Replies (${childComments.length})`
+                        : `Hide Replies (${childComments.length})`}
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </Paper>
             {replyingTo && replyingTo.id === comment.id && (
-              <Box ml={2} mb={2}>
+              <Box mt={2} ml={4}>
                 <TextField
                   label="Add a reply"
                   variant="outlined"
@@ -153,12 +177,28 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
                   variant="contained"
                   color="primary"
                   onClick={handleReplySubmit}
+                  sx={{
+                    backgroundColor: theme.palette.primary.text,
+                    color: theme.palette.primary.main,
+                    fontFamily: theme.typography.fontFamily,
+                    textTransform: "none",
+                    mb: { xs: 1, md: 0 },
+                    mr: { xs: 0, md: 1 },
+
+                    "&:hover": {
+                      backgroundColor: theme.palette.primary.button,
+                    },
+                  }}
                 >
                   Post Reply
                 </Button>
               </Box>
             )}
-            {renderComments(comments, comment.id, level + 1)}
+            {!hiddenReplies[comment.id] && (
+              <Box ml={4}>
+                {renderComments(comments, comment.id, level + 1)}
+              </Box>
+            )}
           </Box>
         );
       });
@@ -166,8 +206,9 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
 
   return (
     <Box mt={2}>
-      <Typography variant="h5" gutterBottom>
-        Comments
+      <Divider sx={{ mt: 8, borderColor: theme.palette.primary.border }} />
+      <Typography variant="h5" gutterBottom sx={{ marginTop: "1rem" }}>
+        Comments:
       </Typography>
       {renderComments(comments)}
       <TextField
@@ -180,7 +221,23 @@ const CommentSection = ({ postId, userIsAuthenticated, user }) => {
         rows={4}
         margin="normal"
       />
-      <Button variant="contained" color="primary" onClick={handleCommentSubmit}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleCommentSubmit}
+        sx={{
+          backgroundColor: theme.palette.primary.text,
+          color: theme.palette.primary.main,
+          fontFamily: theme.typography.fontFamily,
+          textTransform: "none",
+          mb: { xs: 1, md: 0 },
+          mr: { xs: 0, md: 1 },
+
+          "&:hover": {
+            backgroundColor: theme.palette.primary.button,
+          },
+        }}
+      >
         Post Comment
       </Button>
     </Box>

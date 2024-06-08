@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import PostList, PostDetail, CreatePost, AdminPostDetails, EditPost, DeletePost, PostListDetailFilter, UserPostsList, CreateComment, PostCommentsList, UserDetailView, CreateCommentForGuest, LikeToggleView, CommentReplyCreateView
-from . import views
+from .views import CategoryList, PostList, PostDetail, CreatePost, AdminPostDetails, EditPost, DeletePost, PostListDetailFilter, UserPostsList, CreateComment, PostCommentsList, UserDetailView, CreateCommentForGuest, LikeToggleView, ProjectsList, CreateProject, AdminProjectDetails, EditProject, DeleteProject
 
 app_name = 'personal_portfolio'
 
@@ -19,14 +18,25 @@ urlpatterns = [
     path('posts/<int:pk>/comments/create/', CreateComment.as_view(), name='create-comment'),
     path('posts/<int:pk>/comments/create/guest/', CreateCommentForGuest.as_view(), name='create-comment-guest'),
     path('posts/<int:pk>/comments/', PostCommentsList.as_view(), name='post-comments-list'),
-    path('posts/<int:pk>/comments/<int:parent_id>/reply/', CommentReplyCreateView.as_view(), name='comment-reply-create'),
 
     path('posts/<int:pk>/like/', LikeToggleView.as_view(), name='like_toggle'),
 
     path('user/', UserDetailView.as_view(), name='user-detail'),
 
+     path('categories/', CategoryList.as_view(), name='category-list'),
+
+
+    path('admin/projects/', ProjectsList.as_view(), name='projects'),
+    path('admin/create_project/', CreateProject.as_view(), name='create-project'),
+    path('admin/edit/project-detail/<int:pk>/', AdminProjectDetails.as_view(), name='admin-project-detail'),
+    path('admin/edit-project/<int:pk>/', EditProject.as_view(), name='edit-project'),
+    path('admin/delete-project/<int:pk>/', DeleteProject.as_view(), name='delete-project'),
+
+
 
 ]
+
+
 
 
 
