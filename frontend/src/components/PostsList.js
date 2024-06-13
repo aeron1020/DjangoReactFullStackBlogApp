@@ -102,7 +102,6 @@ const Posts = (props) => {
                       <Grid item xs={8}>
                         <Typography
                           gutterBottom
-                          component="text"
                           className={classes.postTitle}
                           sx={{
                             textAlign: "left",

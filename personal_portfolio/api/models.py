@@ -78,14 +78,21 @@ class Like(models.Model):
         return f'Session {self.session_key} likes {self.post.title}'
     
 
+class Technology(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+
 class Project(models.Model):
     project_title = models.CharField(max_length=250)
     description = models.TextField()
-    status = models.CharField(max_length=10, choices=[('draft', 'Draft'), ('published', 'Published')], default='draft')
     slug = models.SlugField(max_length=255, unique=True, blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+    tech_stack = models.ManyToManyField('Technology', related_name='projects', blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

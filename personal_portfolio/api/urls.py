@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CategoryList, PostList, PostDetail, CreatePost, AdminPostDetails, EditPost, DeletePost, PostListDetailFilter, UserPostsList, CreateComment, PostCommentsList, UserDetailView, CreateCommentForGuest, LikeToggleView, ProjectsList, CreateProject, AdminProjectDetails, EditProject, DeleteProject
+from .views import CategoryList, PostList, PostDetail, ProjectDetails, CreatePost, AdminPostDetails, EditPost, DeletePost, PostListDetailFilter, UserPostsList, CreateComment, PostCommentsList, UserDetailView, CreateCommentForGuest, LikeToggleView, ProjectsList, CreateProject, AdminProjectDetails, EditProject, DeleteProject, TechnologyListView
 
 app_name = 'personal_portfolio'
 
@@ -23,10 +23,11 @@ urlpatterns = [
 
     path('user/', UserDetailView.as_view(), name='user-detail'),
 
-     path('categories/', CategoryList.as_view(), name='category-list'),
-
+    path('categories/', CategoryList.as_view(), name='category-list'),
+     path('technologies/', TechnologyListView.as_view(), name='technology-list'),
 
     path('admin/projects/', ProjectsList.as_view(), name='projects'),
+    path('admin/project/<int:pk>/', ProjectDetails.as_view(), name='admin-project-detail'),
     path('admin/create_project/', CreateProject.as_view(), name='create-project'),
     path('admin/edit/project-detail/<int:pk>/', AdminProjectDetails.as_view(), name='admin-project-detail'),
     path('admin/edit-project/<int:pk>/', EditProject.as_view(), name='edit-project'),

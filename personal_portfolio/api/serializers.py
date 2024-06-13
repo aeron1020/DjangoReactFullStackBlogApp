@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Category, Comment, Like, Project
+from .models import Post, Category, Comment, Like, Project, Technology
 from users.models import NewUser
 
 class UserSerializer(serializers.ModelSerializer):
@@ -43,10 +43,12 @@ class LikeSerializer(serializers.ModelSerializer):
         model = Like
         fields = ('id', 'user', 'session_key', 'created_at')
 
-
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ['id', 'project_title', 'slug', 'description', 'status', 'author', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'slug', 'author', 'created_at', 'updated_at']
+        fields = ['id', 'project_title', 'description', 'slug', 'author', 'created_at', 'updated_at', 'tech_stack']
 
+class TechnologySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Technology
+        fields = ['id', 'name']

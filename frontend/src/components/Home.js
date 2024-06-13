@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import PostsList from "./PostsList";
-import ProjectsList from "./projects/ProjectsList";
-import ProjectLoadingComponent from "./projects/ProjectLoading";
 import PostLoadingComponent from "./PostLoading";
 import HomeAvatar from "./HomeAvatar";
 import { Box, Container, Divider, Typography } from "@mui/material";
@@ -32,27 +30,6 @@ function Home() {
       });
   }, []);
 
-  const ProjectLoading = ProjectLoadingComponent(ProjectsList);
-  const [projappState, projsetAppState] = useState({
-    loading: false,
-    projects: null,
-  });
-
-  useEffect(() => {
-    setAppState({ loading: true });
-    const apiUrl = `admin/projects/`;
-    axiosInstance
-      .get(apiUrl)
-      .then((response) => {
-        projsetAppState({ loading: false, projects: response.data });
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching projects:", error);
-        setAppState({ loading: false, projects: [] });
-      });
-  }, []);
-
   return (
     <div className="App">
       <Container>
@@ -73,20 +50,6 @@ function Home() {
         </Box>
 
         <Divider sx={{ my: 4, borderColor: theme.palette.primary.border }} />
-
-        <Box
-          sx={{
-            textAlign: "center",
-            padding: 8,
-          }}
-        >
-          {/* Latest post */}
-          <Typography variant="h4">Projects</Typography>
-          <ProjectLoading
-            isLoading={projappState.loading}
-            projects={projappState.projects}
-          />
-        </Box>
       </Container>
     </div>
   );

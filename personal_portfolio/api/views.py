@@ -1,10 +1,10 @@
 from rest_framework import generics
-from .serializers import PostSerializer, UserSerializer, CommentSerializer, ProjectSerializer, CategorySerializer
+from .serializers import PostSerializer, UserSerializer, CommentSerializer, ProjectSerializer, CategorySerializer, TechnologySerializer
 from rest_framework.permissions import SAFE_METHODS, BasePermission, IsAdminUser, DjangoModelPermissions, IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework import filters
 from rest_framework import permissions
 from django.db.models import Q
-from .models import Post, Comment, Like, Project, Category
+from .models import Post, Comment, Like, Project, Category, Technology
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -233,12 +233,17 @@ class ProjectUserWritePermission(permissions.BasePermission):
 class ProjectsList(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = ProjectSerializer
-   
+
     def get_queryset(self):
-        return Project.objects.filter(Q(status='published'))
+        return Project.objects.all()
+    
+class ProjectDetails(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.AllowAny]
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
 
 class CreateProject(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
@@ -268,4 +273,13 @@ class DeleteProject(generics.RetrieveDestroyAPIView):
     def perform_destroy(self, instance):
         instance.is_deleted = True
         instance.save()
+
+
+class TechnologyListView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        technologies = Technology.objects.all()
+        serializer = TechnologySerializer(technologies, many=True)
+        return Response(serializer.data)
 

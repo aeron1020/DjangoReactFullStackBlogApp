@@ -10,7 +10,6 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Axios";
 import { useTheme } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,7 +20,6 @@ const Delete = ({ postId }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const navigate = useNavigate();
 
   const handleOpen = () => {
     setOpen(true);
@@ -43,7 +41,7 @@ const Delete = ({ postId }) => {
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
       // Redirect to admin page after successful deletion
-      navigate("/admin");
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting post:", error);
       setSnackbarMessage("Error deleting post.");

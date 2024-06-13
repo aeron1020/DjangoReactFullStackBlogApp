@@ -8,6 +8,12 @@ import {
   Paper,
   TextField,
   Typography,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Checkbox,
+  ListItemText,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import slugify from "slugify";
@@ -19,21 +25,52 @@ const CreateProjectForm = () => {
   const [projectData, setProjectData] = useState({
     project_title: "",
     description: "",
-    status: "draft",
-    slug: "", // Added slug field
+    slug: "",
+    tech_stack: [],
+    author: "", // Add author field here
   });
   const [loading, setLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
+  const [technologies, setTechnologies] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
 
     if (token) {
       setAuthenticated(true);
+      fetchUserData(token); // Fetch user data after authentication
     } else {
       setAuthenticated(false);
     }
+
+    // Fetch technologies from the backend
+    const fetchTechnologies = async () => {
+      try {
+        const response = await axiosInstance.get("/technologies/");
+        setTechnologies(response.data);
+      } catch (error) {
+        console.error("Error fetching technologies:", error);
+      }
+    };
+
+    fetchTechnologies();
   }, []);
+
+  const fetchUserData = async (token) => {
+    try {
+      const response = await axiosInstance.get("/user/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setProjectData((prevData) => ({
+        ...prevData,
+        author: response.data.id, // Assuming the user ID is returned in response.data.id
+      }));
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   const handleChange = (e) => {
     if (e.target.name === "project_title") {
@@ -41,7 +78,7 @@ const CreateProjectForm = () => {
       setProjectData({
         ...projectData,
         [e.target.name]: e.target.value,
-        slug: slug, // Set the slug based on the project title
+        slug: slug,
       });
     } else {
       setProjectData({
@@ -49,6 +86,13 @@ const CreateProjectForm = () => {
         [e.target.name]: e.target.value,
       });
     }
+  };
+
+  const handleTechStackChange = (event) => {
+    setProjectData({
+      ...projectData,
+      tech_stack: event.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -68,13 +112,12 @@ const CreateProjectForm = () => {
         }
       );
 
-      console.log("Response:", response); // Log the response object
+      console.log("Response:", response);
 
       if (response && response.data) {
-        // Check if response and data are defined
         const newProjectData = response.data;
         console.log("New Project Data:", newProjectData);
-        window.location.href = `/projects/${newProjectData.slug}/`;
+        window.location.href = `/projects`;
         console.log("Project created successfully");
       } else {
         console.error("Error creating project: Response or data is undefined");
@@ -169,24 +212,36 @@ const CreateProjectForm = () => {
                 />
               </Box>
               <Box mb={2}>
-                <TextField
-                  select
-                  label="Status"
-                  fullWidth
-                  name="status"
-                  value={projectData.status}
-                  onChange={handleChange}
-                  SelectProps={{
-                    native: true,
-                  }}
-                  InputLabelProps={{
-                    style: { color: theme.palette.primary.text },
-                  }}
-                  InputProps={{ style: { color: theme.palette.primary.text } }}
-                >
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
-                </TextField>
+                <FormControl fullWidth>
+                  <InputLabel style={{ color: theme.palette.primary.text }}>
+                    Tech Stack
+                  </InputLabel>
+                  <Select
+                    label="Tech Stack"
+                    multiple
+                    name="tech_stack"
+                    value={projectData.tech_stack}
+                    onChange={handleTechStackChange}
+                    renderValue={(selected) =>
+                      selected
+                        .map(
+                          (value) =>
+                            technologies.find((tech) => tech.id === value).name
+                        )
+                        .join(", ")
+                    }
+                    style={{ color: theme.palette.primary.text }}
+                  >
+                    {technologies.map((tech) => (
+                      <MenuItem key={tech.id} value={tech.id}>
+                        <Checkbox
+                          checked={projectData.tech_stack.indexOf(tech.id) > -1}
+                        />
+                        <ListItemText primary={tech.name} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Box>
               <Box textAlign="right">
                 <Button

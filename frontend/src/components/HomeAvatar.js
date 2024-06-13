@@ -11,7 +11,7 @@ function HomeAvatar() {
         marginTop: 0.5,
         width: "100%",
         height: "90vh",
-        background: `url(https://source.unsplash.com/random)`,
+        background: `url(http://127.0.0.1:8000/media/post_images/_DSC9097.jpg_20-09-36-188_7NeXvRG.jpg)`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         display: "flex",
