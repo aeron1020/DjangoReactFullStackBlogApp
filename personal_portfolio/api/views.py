@@ -283,3 +283,9 @@ class TechnologyListView(APIView):
         serializer = TechnologySerializer(technologies, many=True)
         return Response(serializer.data)
 
+class PopularPostList(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return Post.objects.filter(deleted=False, status='published').order_by('-likes_count')[:3]

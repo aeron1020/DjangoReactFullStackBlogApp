@@ -8,6 +8,7 @@ export const lightTheme = createTheme({
       text: "#333", // Black
       button: "#007AFF", // Highlighter color for buttons (Blue)
       border: "#34C759", // Highlighter color for borders (Green)
+      transparent: "rgba(255, 255, 255, 0.3)",
     },
     secondary: {
       main: "#FF9500", // Orange
@@ -52,6 +53,7 @@ export const darkTheme = createTheme({
       text: "#F2F2F7", // White
       button: "#007AFF", // Highlighter color for buttons (Blue)
       border: "#34C759", // Highlighter color for borders (Green)
+      transparent: "rgba(0, 0, 0, .4)",
     },
     secondary: {
       main: "#FF9500", //Orange

@@ -82,7 +82,7 @@ const PostRead = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ padding: 0.8 }}>
       <Grid container spacing={3}>
         {/* Left Grid */}
         <Grid item xs={12} md={3}>

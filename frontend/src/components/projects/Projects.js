@@ -7,7 +7,6 @@ import {
   useTheme,
   useMediaQuery,
   Button,
-  Typography,
 } from "@mui/material";
 import axiosInstance from "../../Axios";
 import ProjectList from "./ProjectList";
@@ -56,13 +55,12 @@ const ProjectsList = () => {
 
   if (isMobile) {
     return (
-      <Container>
+      <Container sx={{ padding: 0 }}>
         <CssBaseline />
         {selectedProject ? (
           <Button
             onClick={handleBackClick}
             sx={{
-              mt: 2,
               borderRadius: 20,
             }}
           >
@@ -72,11 +70,9 @@ const ProjectsList = () => {
           </Button>
         ) : null}
         <Paper
-          elevation={3}
+          elevation={1}
           sx={{
-            p: 3,
-
-            backgroundColor: theme.palette.background.main,
+            backgroundColor: theme.palette.primary.main,
           }}
         >
           {selectedProject ? (
@@ -95,31 +91,25 @@ const ProjectsList = () => {
   return (
     <Container>
       <CssBaseline />
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
+      <Grid container spacing={1} sx={{ padding: 0.8 }}>
+        <Grid item xs={12} md={3}>
           <Paper
             elevation={3}
             sx={{
-              p: 3,
-              mt: 4,
+              height: "100vh",
+              overflowY: "auto",
               backgroundColor: theme.palette.background.main,
             }}
           >
             <ProjectList
               projects={projects}
               handleProjectClick={handleProjectClick}
+              selectedProjectId={selectedProject ? selectedProject.id : null}
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} md={8}>
-          <Paper
-            elevation={3}
-            sx={{
-              p: 3,
-              mt: 4,
-              backgroundColor: theme.palette.background.default,
-            }}
-          >
+        <Grid item xs={12} md={9}>
+          <Paper elevation={3}>
             <ProjectDetails
               projectId={selectedProject ? selectedProject.id : null}
             />

@@ -51,4 +51,4 @@ class ProjectSerializer(serializers.ModelSerializer):
 class TechnologySerializer(serializers.ModelSerializer):
     class Meta:
         model = Technology
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'logoUrl']

@@ -41,11 +41,14 @@ function Home() {
         <Box
           sx={{
             textAlign: "center",
-            padding: 8,
+            padding: 0,
+            paddingLeft: 0,
           }}
         >
           {/* Latest post */}
-          <Typography variant="h4">Latest Posts</Typography>
+          <Typography variant="h1" sx={{ marginBottom: 2 }}>
+            Latest Posts
+          </Typography>
           <PostLoading isLoading={appState.loading} posts={appState.posts} />
         </Box>
 

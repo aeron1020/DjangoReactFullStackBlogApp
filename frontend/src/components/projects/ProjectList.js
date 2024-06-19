@@ -1,36 +1,55 @@
-// ProjectList.js
 import React from "react";
 import {
+  Container,
   List,
-  ListItem,
   ListItemText,
   Typography,
+  Card,
+  CardActionArea,
+  CardContent,
   useTheme,
 } from "@mui/material";
 
-const ProjectList = ({ projects, handleProjectClick }) => {
+const ProjectList = ({ projects, handleProjectClick, selectedProjectId }) => {
   const theme = useTheme();
 
   return (
-    <div>
-      <Typography variant="h5" mb={2} color={theme.palette.primary.text}>
+    <Container>
+      <Typography
+        variant="h2"
+        mb={2}
+        color={theme.palette.primary.text}
+        sx={{ textAlign: "left", paddingLeft: 2, paddingTop: 2 }}
+      >
         Projects List
       </Typography>
-      <List>
+
+      <List sx={{ padding: 1 }}>
         {projects.map((project) => (
-          <ListItem
-            button
+          <Card
             key={project.id}
-            onClick={() => handleProjectClick(project.id)} // Pass project id here
+            variant="outlined"
+            sx={{
+              marginBottom: theme.spacing(1),
+              backgroundColor:
+                project.id === selectedProjectId
+                  ? theme.palette.action.selected
+                  : "inherit",
+              transition: "background-color 0.3s",
+            }}
           >
-            <ListItemText
-              primary={project.project_title}
-              style={{ color: theme.palette.primary.text }}
-            />
-          </ListItem>
+            <CardActionArea onClick={() => handleProjectClick(project.id)}>
+              <CardContent>
+                <ListItemText
+                  primary={project.project_title}
+                  style={{ color: theme.palette.primary.text }}
+                />
+              </CardContent>
+            </CardActionArea>
+          </Card>
         ))}
       </List>
-    </div>
+    </Container>
   );
 };
 

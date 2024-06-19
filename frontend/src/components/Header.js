@@ -65,7 +65,7 @@ function Header({ darkMode, handleThemeChange }) {
     <AppBar
       position="sticky"
       sx={{
-        height: 44,
+        height: 36,
         justifyContent: "center",
         backgroundColor: `${theme.palette.primary.main}cc`,
         backdropFilter: "blur(5px)",
@@ -73,6 +73,7 @@ function Header({ darkMode, handleThemeChange }) {
         transform: showHeader ? "translateY(0)" : "translateY(-100%)",
         paddingRight: 5,
         paddingLeft: 5,
+        borderRadius: 2,
       }}
     >
       <Container maxWidth="xl">

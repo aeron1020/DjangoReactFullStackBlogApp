@@ -1,88 +1,3 @@
-// // ProjectDetails.js
-// import React, { useState, useEffect } from "react";
-// import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
-// import axiosInstance from "../../Axios";
-
-// const ProjectDetails = ({ projectId }) => {
-//   const theme = useTheme();
-//   const [selectedProject, setSelectedProject] = useState(null);
-//   const [technologies, setTechnologies] = useState([]);
-//   const [loading, setLoading] = useState(false);
-
-//   useEffect(() => {
-//     const fetchProjectDetails = async () => {
-//       setLoading(true);
-//       try {
-//         const response = await axiosInstance.get(
-//           `/admin/project/${projectId}/`
-//         );
-//         setSelectedProject(response.data);
-//       } catch (error) {
-//         console.error("Error fetching project details:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     const fetchTechnologies = async () => {
-//       try {
-//         const response = await axiosInstance.get("/technologies/");
-//         setTechnologies(response.data);
-//       } catch (error) {
-//         console.error("Error fetching technologies:", error);
-//       }
-//     };
-
-//     fetchProjectDetails();
-//     fetchTechnologies();
-//   }, [projectId]);
-
-//   const getTechStackNames = (techStackIds) => {
-//     return techStackIds
-//       .map((id) => {
-//         const tech = technologies.find((tech) => tech.id === id);
-//         return tech ? tech.name : "Unknown";
-//       })
-//       .join(", ");
-//   };
-
-//   if (loading) {
-//     return (
-//       <Box
-//         display="flex"
-//         justifyContent="center"
-//         alignItems="center"
-//         height="100%"
-//       >
-//         <CircularProgress />
-//       </Box>
-//     );
-//   }
-
-//   if (!selectedProject) {
-//     return (
-//       <Typography variant="body1" color={theme.palette.primary.text}>
-//         Select a project to see details
-//       </Typography>
-//     );
-//   }
-
-//   return (
-//     <div>
-//       <Typography variant="h5" mb={2} color={theme.palette.primary.text}>
-//         {selectedProject.project_title}
-//       </Typography>
-//       <Typography variant="body1" mb={2} color={theme.palette.primary.text}>
-//         {selectedProject.description}
-//       </Typography>
-//       <Typography variant="body2" mb={2} color={theme.palette.primary.text}>
-//         Tech Stack: {getTechStackNames(selectedProject.tech_stack)}
-//       </Typography>
-//     </div>
-//   );
-// };
-
-// export default ProjectDetails;
 import React, { useState, useEffect } from "react";
 import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
 import axiosInstance from "../../Axios";
@@ -100,17 +15,56 @@ const ProjectDetails = ({ projectId }) => {
     return content.split("\n").map((line, index) => {
       if (imageUrlRegex.test(line)) {
         return (
-          <img
+          <Box
+            key={index}
+            component="img"
             src={line}
             alt="Embedded content"
-            key={index}
-            style={{ maxWidth: "100%", margin: "10px 0" }}
+            sx={{
+              maxWidth: "100%",
+              width: "100%",
+              height: "auto",
+              display: "block",
+            }}
           />
         );
       } else if (iframeRegex.test(line)) {
-        return <div dangerouslySetInnerHTML={{ __html: line }} key={index} />;
+        return (
+          <Box
+            key={index}
+            dangerouslySetInnerHTML={{ __html: line }}
+            sx={{
+              padding: 0,
+              maxWidth: "100%",
+              width: "100%",
+              height: {
+                xs: "auto",
+                sm: "auto",
+                md: "500px",
+              },
+              margin: {
+                xs: "0",
+                sm: "10px 0",
+              },
+
+              display: "block",
+              "& iframe": {
+                width: "100%",
+                height: {
+                  xs: "300px",
+                  sm: "300px",
+                  md: "500px",
+                },
+              },
+            }}
+          />
+        );
       } else {
-        return <p key={index}>{line}</p>;
+        return (
+          <Typography key={index} variant="body1" sx={{ margin: "10px 0" }}>
+            {line}
+          </Typography>
+        );
       }
     });
   };
@@ -143,13 +97,28 @@ const ProjectDetails = ({ projectId }) => {
     fetchTechnologies();
   }, [projectId]);
 
-  const getTechStackNames = (techStackIds) => {
-    return techStackIds
-      .map((id) => {
-        const tech = technologies.find((tech) => tech.id === id);
-        return tech ? tech.name : "Unknown";
-      })
-      .join(", ");
+  const getTechStackLogos = (techStackIds) => {
+    return techStackIds.map((id) => {
+      const tech = technologies.find((tech) => tech.id === id);
+      return tech ? (
+        <Box
+          key={id}
+          component="img"
+          src={tech.logoUrl}
+          alt={tech.name}
+          sx={{
+            maxWidth: "40px",
+            maxHeight: "40px",
+            width: "100%",
+            height: "auto",
+            marginRight: "8px",
+            flexShrink: 0,
+          }}
+        />
+      ) : (
+        "Unknown"
+      );
+    });
   };
 
   if (loading) {
@@ -174,18 +143,27 @@ const ProjectDetails = ({ projectId }) => {
   }
 
   return (
-    <div>
+    <Box sx={{ padding: theme.spacing(2), overflowY: "auto", height: "100%" }}>
       <Typography variant="h5" mb={2} color={theme.palette.primary.text}>
-        {selectedProject.project_title}
+        <strong>{selectedProject.project_title}</strong>
       </Typography>
-      {/* Render the description using the renderContent function */}
-      <Box component="div" sx={{ whiteSpace: "pre-line" }}>
+      <Box
+        component="div"
+        sx={{
+          whiteSpace: "pre-line",
+        }}
+      >
         {renderContent(selectedProject.description)}
       </Box>
-      <Typography variant="body2" mb={2} color={theme.palette.primary.text}>
-        Tech Stack: {getTechStackNames(selectedProject.tech_stack)}
-      </Typography>
-    </div>
+      <Box display="flex" alignItems="center" mt={2}>
+        <Typography variant="body2" color={theme.palette.primary.text}>
+          Tech:
+        </Typography>
+        <Box display="flex" alignItems="center" flexWrap="wrap">
+          {getTechStackLogos(selectedProject.tech_stack)}
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
