@@ -233,7 +233,22 @@ function HomeAvatar() {
             display={isMobile ? "none" : "flex"}
             sx={{ width: "100%", textDecoration: "none" }}
           >
-            <Note />
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                background: theme.palette.primary.transparent,
+                borderRadius: 5,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                color: "black",
+                fontWeight: "bold",
+                fontSize: "1.5rem",
+              }}
+            >
+              <Note />
+            </Box>
           </Grid>
         </Grid>
         <Grid
@@ -287,6 +302,7 @@ function HomeAvatar() {
                 "&:hover": {
                   transform: "scale(1.05)",
                   boxShadow: "0 8px 12px rgba(0, 0, 0, 0.15)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 },
               }}
             >
@@ -335,6 +351,7 @@ function HomeAvatar() {
                 "&:hover": {
                   transform: "scale(1.05)",
                   boxShadow: "0 8px 12px rgba(0, 0, 0, 0.15)",
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 },
               }}
             >

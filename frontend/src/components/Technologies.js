@@ -52,6 +52,11 @@ const TechnologiesList = () => {
             width: "40px",
             borderRadius: "50%",
             mx: "auto",
+            "&:hover": {
+              transform: "scale(1.5)",
+              boxShadow: "0 8px 12px rgba(0, 0, 0, 0.15)",
+              transition: "transform 0.3s ease, box-shadow 0.3s ease",
+            },
           }}
         >
           <img

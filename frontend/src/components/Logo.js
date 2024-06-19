@@ -7,7 +7,7 @@ const Logo = ({ sx, ...props }) => {
       src={olsenxangela}
       alt="Logo"
       style={{
-        height: 32,
+        height: 24,
         ...sx,
       }}
       {...props}

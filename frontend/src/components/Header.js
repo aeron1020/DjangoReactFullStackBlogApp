@@ -87,11 +87,11 @@ function Header({ darkMode, handleThemeChange }) {
               background: "linear-gradient(to right, #AEAEAE, #777777)",
               borderTopLeftRadius: 12,
               borderTopRightRadius: 12,
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
+              borderBottomLeftRadius: 2,
+              borderBottomRightRadius: 2,
             }}
           >
-            <Logo sx={{ height: 32 }} />
+            <Logo sx={{ height: 28 }} />
           </Box>
 
           {/* Desktop or larger view */}
@@ -218,11 +218,11 @@ function Header({ darkMode, handleThemeChange }) {
               background: "linear-gradient(to right, #AEAEAE, #777777)",
               borderTopLeftRadius: 12,
               borderTopRightRadius: 12,
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
+              borderBottomLeftRadius: 2,
+              borderBottomRightRadius: 2,
             }}
           >
-            <Logo sx={{ height: 32 }} />
+            <Logo sx={{ height: 28 }} />
           </Box>
 
           <Typography

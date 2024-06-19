@@ -8,16 +8,21 @@ import {
   Grid,
   Paper,
   Typography,
+  Modal,
 } from "@mui/material";
 import CommentSection from "./CommentSection";
 import LikePostButton from "./LikePostButton";
 import NavigateBackButton from "./BackButton";
+import { useTheme } from "@emotion/react";
 
 const PostRead = () => {
   const { slug } = useParams();
   const [post, setPost] = useState(null);
   const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  const theme = useTheme();
 
   useEffect(() => {
     // Fetch current user information
@@ -81,6 +86,9 @@ const PostRead = () => {
     return new Date(dateString).toLocaleString(undefined, options);
   };
 
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <Container sx={{ padding: 0.8 }}>
       <Grid container spacing={3}>
@@ -100,9 +108,10 @@ const PostRead = () => {
               <CardMedia
                 component="img"
                 alt="Post Header Image"
-                height="200"
+                // height="33vh"
                 image={post.head_image}
-                sx={{ objectFit: "cover" }} // Prevent image shrinkage
+                sx={{ objectFit: "cover", cursor: "pointer", height: "50vh" }} // Prevent image shrinkage and add pointer cursor
+                onClick={handleOpen}
               />
 
               <Box p={2}>
@@ -152,6 +161,34 @@ const PostRead = () => {
                   user={user}
                 />
               </Box>
+
+              {/* Modal for viewing image */}
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+              >
+                <Box
+                  sx={{
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "72%",
+                    // height: "100%",
+                    bgcolor: theme.palette.primary.transparent,
+                    padding: 1,
+                    outline: "none",
+                  }}
+                >
+                  <img
+                    src={post.head_image}
+                    alt="Post Header Image"
+                    style={{ width: "100%", height: "auto" }}
+                  />
+                </Box>
+              </Modal>
             </Paper>
           )}
         </Grid>

@@ -9,8 +9,8 @@ const Note = () => {
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "100%",
+        width: "92%",
+        height: "88%",
         background: isDarkMode
           ? "linear-gradient(transparent 100%, rgba(200, 200, 200, 0.1) 100%), repeating-linear-gradient(#333, #333 28px, #444 30px)"
           : "linear-gradient(transparent 100%, rgba(55, 55, 55, 0.1) 100%), repeating-linear-gradient(white, white 28px, #e0e0e0 30px)",
