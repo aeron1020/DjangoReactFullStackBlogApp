@@ -43,10 +43,11 @@ function Home() {
             textAlign: "center",
             padding: 0,
             paddingLeft: 0,
+            background: theme.palette.primary.transparent,
           }}
         >
           {/* Latest post */}
-          <Typography variant="h1" sx={{ marginBottom: 2 }}>
+          <Typography variant="h1" sx={{ padding: 3 }}>
             Latest Posts
           </Typography>
           <PostLoading isLoading={appState.loading} posts={appState.posts} />

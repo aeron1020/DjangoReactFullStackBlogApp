@@ -33,7 +33,7 @@ const Posts = (props) => {
         container
         item
         sx={{
-          backgroundColor: theme.palette.primary.main,
+          background: theme.palette.primary.transparent,
           width: "100%",
         }}
       >
@@ -43,7 +43,7 @@ const Posts = (props) => {
             xs={12}
             sm={6}
             sx={{
-              backgroundColor: theme.palette.primary.main,
+              background: theme.palette.primary.transparent,
               padding: 1,
               width: "100%",
             }}

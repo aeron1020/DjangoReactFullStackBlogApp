@@ -184,7 +184,7 @@ const PostRead = () => {
                 >
                   <img
                     src={post.head_image}
-                    alt="Post Header Image"
+                    alt={post.title}
                     style={{ width: "100%", height: "auto" }}
                   />
                 </Box>

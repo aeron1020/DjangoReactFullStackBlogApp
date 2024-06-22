@@ -229,7 +229,7 @@ function HomeAvatar() {
           </Grid>
           <Grid
             item
-            xs={3}
+            xs={2}
             display={isMobile ? "none" : "flex"}
             sx={{ width: "100%", textDecoration: "none" }}
           >
