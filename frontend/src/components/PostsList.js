@@ -104,7 +104,7 @@ const Posts = (props) => {
                           color: theme.palette.primary.text,
                         }}
                       >
-                        {post.content.substr(0, 100)}...
+                        {post.excerpt}
                       </Typography>
                       <Typography
                         variant="body2"
