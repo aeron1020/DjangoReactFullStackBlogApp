@@ -2,11 +2,11 @@
 
 ## Distinctiveness and Complexity
 
-This project stands out due to its integration of React and Django REST Framework, providing a seamless user experience. The authentication system using JWT tokens. The comment and liking system for a better reader interaction and feedback. Full CRUD functionality for posts and projects, along with the ability to add multimedia content, showcases the application's complexity. The like system limits users to one like per session, ensuring proper session management. Additionally, the admin dashboard for content management highlights the project's real-world applicability and comprehensive feature set.
+This project stands out due to its integration of React and Django REST Framework, providing a seamless user experience. The use of JWT tokens for authentication enhances security. The inclusion of a comment and liking system promotes user interaction and feedback. Full CRUD functionality for posts and projects, along with the ability to add multimedia content, showcases the application's complexity. The like system limits users to one like per session, ensuring proper session management. Additionally, the admin dashboard for content management highlights the project's real-world applicability and comprehensive feature set.
 
 ## Overview
 
-This single-page web app, where I include the fetures of the previous projects, built with React and Django REST Framework, features JWT token authentication and session cookies for secure login. Users can create, update, and delete posts and projects, add videos or links, and like posts once per session. The app includes a unique comment system with cryptic names derived from session cookies. Unauthenticated users can also like and comment for better readers interactions. An admin dashboard allows for easy management of posts, showcasing a blend of modern web development and complex functionalities.
+This single-page web app, which includes features from previous projects, is built with React and Django REST Framework. It features JWT token authentication for secure login. Users can create, update, and delete posts and projects, add videos or links, and like posts once per session. The app includes a unique comment system with cryptic names derived from session cookies. Unauthenticated users can also like and comment for better reader interactions. An admin dashboard allows for easy management of posts, showcasing a blend of modern web development and complex functionalities.
 
 ## Features
 
@@ -44,7 +44,7 @@ This single-page web app, where I include the fetures of the previous projects, 
 ## Usage
 
 1. Navigate to the application in your web browser.
-2. Register or log in to access all features especially writing blogs.
+2. Register or log in to access all features, especially writing blogs.
 3. Explore posts, like, comment, and manage your content.
 
 ## File Descriptions
@@ -118,7 +118,7 @@ This single-page web app, where I include the fetures of the previous projects, 
     - **`session_middleware.py`**: Custom middleware for handling session-related operations.
     - **`tests.py`**: Contains unit tests for the API, ensuring its functionality.
     - **`urls.py`**: URL routing for the API, mapping URL patterns to views.
-    - **`views.py`**: Contains API views that handle HTTP requests and provide responses, implementing the core logic
+    - **`views.py`**: Contains API views that handle HTTP requests and provide responses, implementing the core logic.
 
   - **`media/`**: Directory for user-uploaded media files.
   - **`db.sqlite3`**: SQLite database file containing all the data.
@@ -139,6 +139,66 @@ This single-page web app, where I include the fetures of the previous projects, 
 
   - **`manage.py`**: Command-line utility for interacting with the Django project.
 
-### README.md
+### How to Run Your Application
 
-### requirements.txt
+1. **Clone the Repository**:
+
+   ```bash
+   git clone <repository_url>
+   cd <repository_name>
+   ```
+
+2. **Set Up the Backend**:
+   - Navigate to the backend directory:
+     ```bash
+     cd personal_portfolio
+     ```
+   - Create a virtual environment and activate it:
+     ```bash
+     python -m venv venv
+     source venv/bin/activate
+     ```
+
+`
+` - Install the dependencies:
+`bash
+pip install -r requirements.txt
+` - Apply migrations:
+`bash
+python manage.py migrate
+` - Create a superuser for the admin dashboard:
+`bash
+python manage.py createsuperuser
+` - Run the development server:
+`bash
+python manage.py runserver
+
+````
+
+3. **Set Up the Frontend**:
+
+   - Open a new terminal window and navigate to the frontend directory:
+     ```bash
+     cd frontend
+     ```
+   - Install the dependencies:
+     ```bash
+     npm install
+     ```
+   - Start the development server:
+     ```bash
+     npm start
+     ```
+
+4. **Access the Application**:
+   - Open your web browser and navigate to `http://localhost:3000` for the frontend.
+   - Access the admin dashboard at `http://127.0.0.1:8000/admin` for backend management.
+
+
+## Additional Information
+
+- The application uses SQLite as the default database. You can change the database settings in `personal_portfolio/settings.py` if needed.
+- Ensure that the frontend and backend servers are running simultaneously for full functionality.
+- The project structure follows best practices for both Django and React applications, making it easy to understand and extend.
+
+````
