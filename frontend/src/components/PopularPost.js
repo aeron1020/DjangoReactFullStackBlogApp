@@ -43,18 +43,32 @@ const PopularPost = () => {
               alt={post.title}
             />
           )}
-          <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+          <Box
+            to={`/posts/${post.slug}`}
+            component={Link}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              textDecoration: "none",
+              color: "inherit",
+            }}
+          >
             <CardContent sx={{ flex: "1 0 auto" }}>
               <Typography
-                to={`/posts/${post.slug}`}
-                component={Link}
-                variant="p"
-                sx={{ textDecoration: "none", color: "inherit" }}
+                variant="h1"
+                sx={{
+                  textDecoration: "none",
+                  color: "inherit",
+                  fontSize: "1.2rem",
+                }}
               >
                 {post.title}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {post.excerpt}
+                {post.excerpt && post.excerpt.length > 100
+                  ? `${post.excerpt.substring(0, 100)}...`
+                  : post.excerpt}
               </Typography>
             </CardContent>
           </Box>

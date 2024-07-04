@@ -58,10 +58,11 @@ function HomeAvatar() {
             <Box
               sx={{
                 height: "100%",
-                backgroundImage: `url('https://scontent.fcrk1-4.fna.fbcdn.net/v/t39.30808-6/448377342_7964748430255976_974171453849455659_n.jpg?stp=cp6_dst-jpg&_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeErldz8CBzRf5KkrpcvHbd3YJe-adlWqohgl75p2VaqiLU4-WC6v_bnc8G0FUsA1ywshcAP9IY1XXvjEabYZL9q&_nc_ohc=JrquLEMAbncQ7kNvgH1dqBd&_nc_ht=scontent.fcrk1-4.fna&cb_e2o_trans=t&oh=00_AYCeon1OtYssrL8slkhEZT3ZtDPrPWMYNRb6110wnxsyoA&oe=66747D98')`,
+                backgroundImage: `url('https://scontent-mnl1-2.xx.fbcdn.net/v/t39.30808-6/448377342_7964748430255976_974171453849455659_n.jpg?stp=cp6_dst-jpg&_nc_cat=111&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeErldz8CBzRf5KkrpcvHbd3YJe-adlWqohgl75p2VaqiLU4-WC6v_bnc8G0FUsA1ywshcAP9IY1XXvjEabYZL9q&_nc_ohc=dyebsIR3jtUQ7kNvgFbLGx2&_nc_ht=scontent-mnl1-2.xx&cb_e2o_trans=t&oh=00_AYCoWCv76_Dm-UlWJycrqPjThipqHipqWNaLJm1WyWtkLw&oe=66887C58')`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 borderRadius: 5,
+                color: theme.palette.primary.button,
               }}
             >
               <Grid
