@@ -116,8 +116,8 @@ CORS_ALLOW_HEADERS = [
 AUTH_USER_MODEL = "users.NewUser"
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(seconds=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(seconds=30),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
@@ -127,9 +127,9 @@ SIMPLE_JWT = {
     "VERIFYING_KEY": None,
     "AUDIENCE": None,
     "ISSUER": None,
-    # "JSON_ENCODER": None,
-    # "JWK_URL": None,
-    # "LEEWAY": 0,
+    "JSON_ENCODER": None,
+    "JWK_URL": None,
+    "LEEWAY": 0,
 
     "AUTH_HEADER_TYPES": ("Bearer", "JWT"),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
@@ -194,6 +194,7 @@ DATABASES = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
+
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -236,3 +237,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 STATIC_URL = '/static/'
 STATIC_ROOT = '/app/static/'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend'
+]

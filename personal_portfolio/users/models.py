@@ -11,13 +11,9 @@ class CustomAccountManager(BaseUserManager):
         other_fields.setdefault('is_active', True)
 
         if other_fields.get('is_staff') is not True:
-            raise ValueError (
-                'Superuser must be assigned to is_superuser=True.'
-            )
+            raise ValueError('Superuser must be assigned to is_staff=True.')
         if other_fields.get('is_superuser') is not True:
-            raise ValueError (
-                'Superuser must be assigned to is_superuser=True'
-            )
+            raise ValueError('Superuser must be assigned to is_superuser=True.')
         
         return self.create_user(email, user_name, first_name, password, **other_fields)
     
@@ -36,12 +32,22 @@ class CustomAccountManager(BaseUserManager):
 
 class NewUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
-    user_name = models.CharField(max_length=150, unique=True)
+    username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=10, blank=True)
+    address = models.CharField(max_length=255, blank=True)
+    social_media_links = models.JSONField(blank=True, null=True)
     start_date = models.DateTimeField(default=timezone.now)
     about = models.TextField(_('about'), max_length=500, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_email_verified = models.BooleanField(default=False)
+    email_verification_token = models.CharField(max_length=255, blank=True, null=True)
 
     objects = CustomAccountManager()
 
@@ -49,4 +55,4 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['user_name', 'first_name']
 
     def __str__(self):
-        return self.user_name
+        return self.username

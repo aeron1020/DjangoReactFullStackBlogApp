@@ -275,55 +275,6 @@ const PostRead = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // const processContent = (content) => {
-  //   const parser = new DOMParser();
-  //   const doc = parser.parseFromString(content, "text/html");
-
-  //   // Handle <oembed> tags
-  //   const oembedTags = doc.querySelectorAll("oembed");
-  //   oembedTags.forEach((oembed) => {
-  //     const url = oembed.getAttribute("url");
-  //     if (url.includes("youtu.be") || url.includes("youtube.com")) {
-  //       const iframe = document.createElement("iframe");
-  //       iframe.setAttribute(
-  //         "src",
-  //         url
-  //           .replace("youtu.be", "www.youtube.com/embed")
-  //           .replace("/watch?v=", "/embed/")
-  //       );
-  //       iframe.setAttribute("width", "100%");
-  //       iframe.setAttribute("height", "315");
-  //       iframe.setAttribute("frameborder", "0");
-  //       iframe.setAttribute("allowfullscreen", "true");
-  //       oembed.parentNode.replaceChild(iframe, oembed);
-  //     }
-  //   });
-
-  //   // Handle image URLs inside <figure class="media">
-  //   const imageUrls = doc.querySelectorAll("figure.media img");
-  //   imageUrls.forEach((img) => {
-  //     const imgUrl = img.src;
-  //     const imgTag = document.createElement("img");
-  //     imgTag.setAttribute("src", imgUrl);
-  //     imgTag.setAttribute("alt", "Embedded content");
-  //     imgTag.style.maxWidth = "100%";
-  //     imgTag.style.margin = "10px 0";
-  //     img.parentNode.replaceChild(imgTag, img);
-  //   });
-
-  //   // Handle plain image URLs in content
-  //   const plainUrls = doc.body.innerHTML.match(
-  //     /(https?:\/\/.*\.(?:png|jpg|jpeg|gif))/gi
-  //   );
-  //   if (plainUrls) {
-  //     plainUrls.forEach((url) => {
-  //       const imgTag = `<img src="${url}" alt="Embedded content" style="max-width: 100%; max-height: 50vh; margin: 10px 0;">`;
-  //       doc.body.innerHTML = doc.body.innerHTML.replace(url, imgTag);
-  //     });
-  //   }
-
-  //   return doc.body.innerHTML;
-  // };
   const processContent = (content) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
@@ -444,7 +395,7 @@ const PostRead = () => {
                 component="img"
                 alt="Post Header Image"
                 image={post.head_image}
-                sx={{ objectFit: "cover", cursor: "pointer", height: "50vh" }} // Prevent image shrinkage and add pointer cursor
+                sx={{ objectFit: "cover", cursor: "pointer", height: "50vh" }}
                 onClick={handleOpen}
               />
 
@@ -464,7 +415,7 @@ const PostRead = () => {
                     color="textSecondary"
                     gutterBottom
                   >
-                    {post.author.user_name}
+                    {post.author.first_name}
                   </Typography>
                 )}
                 <Typography

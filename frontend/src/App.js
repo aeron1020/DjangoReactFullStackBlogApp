@@ -19,6 +19,8 @@ import Register from "./components/auth/Register";
 import Footer from "./components/Footer";
 import SwitchTheme from "./components/SwitchTheme";
 import CreateProjectForm from "./components/projects/CreateProject";
+import PasswordChange from "./components/auth/PasswordChange";
+import Settings from "./components/settings/Settings";
 
 function App() {
   const storedDarkMode = JSON.parse(localStorage.getItem("darkMode"));
@@ -43,6 +45,7 @@ function App() {
           <AuthCheck />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/settings/*" element={<Settings />} />
             <Route path="/posts/*" element={<Blogs />} />
             <Route path="/projects/*" element={<Projects />} />
             <Route path="/posts/:slug" element={<SinglePost />} />
@@ -54,6 +57,7 @@ function App() {
               path="/admin/create_project"
               element={<CreateProjectForm />}
             />
+            <Route path="/password-change" element={<PasswordChange />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/register" element={<Register />} />

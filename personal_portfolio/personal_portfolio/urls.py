@@ -35,7 +35,6 @@ urlpatterns = [
         description='API for BlogApi',
         version="1.0.0"),
         name='openapi-schema')
-    
     ,
     
 ]

@@ -1,13 +1,10 @@
 from rest_framework.views import APIView
-from rest_framework import generics, status
+from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import NewUserSerializer
-from .models import NewUser
-from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
     
 class RegisterView(APIView):
@@ -17,7 +14,7 @@ class RegisterView(APIView):
         reg_serializer = NewUserSerializer(data=request.data)
 
         if reg_serializer.is_valid():
-            password = request.data.get('password')  # Get the password from the request data
+            password = request.data.get('password') 
             if not self.validate_password_strength(password):
                 return Response({"password": ["Password must be at least 8 characters long."]}, status=status.HTTP_400_BAD_REQUEST)
             
@@ -46,3 +43,5 @@ class BlacklistTokenView(APIView):
             return Response(status=status.HTTP_200_OK)
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+

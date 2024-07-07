@@ -70,6 +70,7 @@ const LoginForm = () => {
           >
             Login
           </Button>
+          <GoogleLogin />
         </form>
       </Box>
       <Box sx={{ margin: 40 }}></Box>

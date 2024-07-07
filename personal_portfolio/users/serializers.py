@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from .models import NewUser
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 
 class NewUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewUser
-        fields = ['user_name', 'email', 'password']
+        fields = ['username', 'email', 'password']
         extra_kwargs = {
             'password': {'write_only': True}
         }

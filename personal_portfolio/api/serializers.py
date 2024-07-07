@@ -1,11 +1,37 @@
 from rest_framework import serializers
 from .models import Post, Category, Comment, Like, Project, Technology
 from users.models import NewUser
+from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+
+class PasswordChangeSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Old password is incorrect.")
+        return value
+
+    def validate_new_password(self, value):
+        try:
+            validate_password(value)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.messages)
+        return value
+
+    def save(self):
+        user = self.context['request'].user
+        user.set_password(self.validated_data['new_password'])
+        user.save()
+        return user
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewUser
-        fields = ('id', 'user_name', 'email')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
