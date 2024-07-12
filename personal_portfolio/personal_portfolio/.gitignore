@@ -1,0 +1,7 @@
+*.pyc
+*/*.pyc
+*/*/*.pyc
+
+.venv
+
+db.sqlite3
