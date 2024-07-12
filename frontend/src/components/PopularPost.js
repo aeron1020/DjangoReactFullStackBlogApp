@@ -21,7 +21,14 @@ const PopularPost = () => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h1" sx={{ textAlign: "left", marginBottom: 3 }}>
+      <Typography
+        variant="h1"
+        sx={{
+          textAlign: "left",
+          marginBottom: 3,
+          fontSize: { xs: "1rem", sm: "1.5rem", md: "2rem" },
+        }}
+      >
         Popular Posts
       </Typography>
 
@@ -60,12 +67,18 @@ const PopularPost = () => {
                 sx={{
                   textDecoration: "none",
                   color: "inherit",
-                  fontSize: "1.2rem",
+                  fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" },
                 }}
               >
                 {post.title}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  fontSize: { xs: ".5rem", sm: ".8rem", md: ".9rem" },
+                }}
+              >
                 {post.excerpt && post.excerpt.length > 100
                   ? `${post.excerpt.substring(0, 100)}...`
                   : post.excerpt}
