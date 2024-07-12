@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import { Box, CircularProgress } from "@mui/material";
 
+import isMobile from "./HomeAvatar";
+
 const Posts = (props) => {
   const theme = useTheme();
   const { posts } = props;
@@ -56,6 +58,7 @@ const Posts = (props) => {
                   flexDirection: "column",
                   backgroundColor: theme.palette.primary.default,
                   minHeight: "12rem",
+                  maxHeight: "15rem",
                   borderRadius: 5,
                 }}
               >
@@ -90,6 +93,9 @@ const Posts = (props) => {
                         sx={{
                           textAlign: "left",
                           color: theme.palette.primary.text,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis", // Adds an ellipsis (...) when the text overflows
+                          maxWidth: "100%",
                         }}
                       >
                         {post.title}
@@ -102,6 +108,10 @@ const Posts = (props) => {
                         sx={{
                           textAlign: "left",
                           color: theme.palette.primary.text,
+                          whiteSpace: "nowrap", // Prevents the text from wrapping
+                          overflow: "hidden", // Ensures the overflow text is hidden
+                          textOverflow: "ellipsis", // Adds an ellipsis (...) when the text overflows
+                          maxWidth: "100%",
                         }}
                       >
                         {post.excerpt}
