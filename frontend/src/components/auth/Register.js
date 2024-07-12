@@ -69,7 +69,7 @@ export default function SignUp() {
     axiosInstance
       .post(`users/register/`, {
         email: formData.email,
-        user_name: formData.username,
+        username: formData.username,
         password: formData.password,
       })
       .then((response) => {
