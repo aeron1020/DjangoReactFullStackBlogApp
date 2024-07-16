@@ -32,7 +32,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['188.166.255.20']
+ALLOWED_HOSTS = ['frontend-black-zeta-78.vercel.app']
+
 
 
 # Application definition
