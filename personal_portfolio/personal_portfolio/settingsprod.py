@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['frontend-black-zeta-78.vercel.app']
+ALLOWED_HOSTS = ['frontend-black-zeta-78.vercel.app', '188.166.255.20']
 
 
 
@@ -96,15 +96,17 @@ X_FRAME_OPTIONS = 'DENY'
 # CSRF settings
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000",]
-CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_COOKIE_SECURE = False 
+CSRF_TRUSTED_ORIGINS = ['https://frontend-black-zeta-78.vercel.app', 'http://188.166.255.20']
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
 
 ROOT_URLCONF = 'personal_portfolio.urls'
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
-]
+    'http://localhost:3000', 
+    'https://frontend-black-zeta-78.vercel.app',
+    'http://188.166.255.20'
+    ]
 
 CORS_ALLOW_CREDENTIALS = True
 
