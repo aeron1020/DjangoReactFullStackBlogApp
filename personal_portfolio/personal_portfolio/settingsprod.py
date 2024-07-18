@@ -107,7 +107,7 @@ ROOT_URLCONF = 'personal_portfolio.urls'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000', 
-    'https://frontend-black-zeta-78.vercel.app',
+    'https://frontend-1vfagkwta-olsenaerons-projects.vercel.app/',
     'http://188.166.255.20'
     ]
 
