@@ -99,7 +99,7 @@ X_FRAME_OPTIONS = 'DENY'
 # CSRF settings
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
-CSRF_TRUSTED_ORIGINS = ['https://frontend-black-zeta-78.vercel.app', 'http://188.166.255.20']
+CSRF_TRUSTED_ORIGINS = ['https://frontend-black-zeta-78.vercel.app/', 'http://188.166.255.20']
 CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = True
 
@@ -107,7 +107,7 @@ ROOT_URLCONF = 'personal_portfolio.urls'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000', 
-    'https://frontend-1vfagkwta-olsenaerons-projects.vercel.app/',
+    'https://frontend-black-zeta-78.vercel.app/',
     'http://188.166.255.20'
     ]
 
@@ -196,7 +196,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'personal_portfolio',
-        'USER': 'postgres',
+        'USER': 'personal_portfoliouser',
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': 'localhost',
         'PORT': ''
