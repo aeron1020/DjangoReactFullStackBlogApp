@@ -197,9 +197,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'personal_portfolio',
         'USER': 'personal_portfoliouser',
-        'PASSWORD': 'projectonepasswor',#os.environ.get('DB_PASSWORD', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': 'localhost',
-        'PORT': ''
+        'PORT': '5432'
     }
 }
 
