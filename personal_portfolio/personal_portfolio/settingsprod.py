@@ -199,7 +199,7 @@ DATABASES = {
         'USER': 'personal_portfoliouser',
         'PASSWORD': os.environ.get('DB_PASSWORD', ''),
         'HOST': 'localhost',
-        'PORT': '5435',
+        'PORT': '5432',
     }
 }
 
