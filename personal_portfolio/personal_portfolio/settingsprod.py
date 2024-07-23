@@ -35,7 +35,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['olsenaeron.com', '188.166.255.20']
+ALLOWED_HOSTS = ['olsenaeron.com', 'www.olsenaeron.com', '188.166.255.20']
+
 
 
 
@@ -103,13 +104,14 @@ CSRF_TRUSTED_ORIGINS = ['https://www.olsenaeron.com', 'http://188.166.255.20']
 CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = True
 
+
 ROOT_URLCONF = 'personal_portfolio.urls'
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000', 
+    # 'http://localhost:3000',
     'https://www.olsenaeron.com',
-    'http://188.166.255.20'
-    ]
+    'http://188.166.255.20',
+]
 
 CORS_ALLOW_CREDENTIALS = True
 

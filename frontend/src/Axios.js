@@ -90,7 +90,7 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const baseURL = "https://www.olsenaeron.com/api/";
+const baseURL = "https://188.166.255.20/api/";
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
