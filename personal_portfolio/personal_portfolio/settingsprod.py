@@ -35,7 +35,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['olsenaeron.com', 'www.olsenaeron.com', '188.166.255.20']
+ALLOWED_HOSTS = ['olsenaeron.com', 'www.olsenaeron.com', 'api.olsenaeron.com']
 
 
 
