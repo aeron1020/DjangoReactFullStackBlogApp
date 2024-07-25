@@ -69,6 +69,7 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -266,8 +267,12 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/app/static/'
+STATIC_ROOT = BASE_DIR / "static"
+
+STATICFILES_STORAGE = 'whitenoise.storage. CompressManifestStaticFilesStorage'
+
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend'
 ]
+
