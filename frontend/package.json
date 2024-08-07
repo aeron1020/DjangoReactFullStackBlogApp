@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build --output public",
+    "build": "CI=false && react-scripts build --output-path frontend/build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
