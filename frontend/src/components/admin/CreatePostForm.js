@@ -488,7 +488,7 @@ const CreatePostForm = () => {
     } catch (error) {
       console.error(
         "Error creating post:",
-        error.response?.data || error.message
+        error.response.data || error.message
       );
 
       setSnackbarMessage("Error creating post.");
