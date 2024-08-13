@@ -453,6 +453,9 @@ const CreatePostForm = () => {
       ...prevData,
       content: data,
     }));
+
+    // Log the content data to debug
+    console.log("Content Change:", data);
   };
 
   const handleSubmit = async (e) => {
@@ -463,6 +466,9 @@ const CreatePostForm = () => {
     Object.keys(postData).forEach((key) => {
       formData.append(key, postData[key]);
     });
+
+    // Log the form data before submission
+    console.log("Form Data on Submit:", Array.from(formData.entries()));
 
     try {
       const token = localStorage.getItem("access_token");
