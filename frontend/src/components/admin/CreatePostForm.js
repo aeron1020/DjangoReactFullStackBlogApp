@@ -466,12 +466,16 @@ const CreatePostForm = () => {
 
     try {
       const token = localStorage.getItem("access_token");
+      console.log("JWT Token:", token);
+
       const response = await axiosInstance.post("/admin/create/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `JWT ${token}`,
         },
       });
+
+      console.log("Server Response:", response);
 
       const newPostData = response.data;
 
