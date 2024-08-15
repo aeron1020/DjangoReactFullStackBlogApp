@@ -477,7 +477,7 @@ const CreatePostForm = () => {
       const response = await axiosInstance.post("/admin/create/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+          Authorization: `JWT ${token}`,
         },
       });
 
