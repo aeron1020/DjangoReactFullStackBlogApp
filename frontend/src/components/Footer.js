@@ -29,37 +29,53 @@ function Footer() {
         © {new Date().getFullYear()} OlsenAeron. All rights reserved.
       </Typography>
       <Typography variant="body2" color="inherit" mt={1}>
-        Created with love by{" "}
-        <Link href="https://example.com" color="inherit">
-          Your Name
+        Created by{" "}
+        <Link href="https://olsenaeron.com" color="inherit">
+          OlsenAeron
         </Link>
       </Typography>
 
       {/* Social media icons */}
       <Box mt={2}>
-        <IconButton aria-label="Facebook" color="inherit">
+        <IconButton
+          href="https://www.facebook.com/iam.aeronman/"
+          aria-label="Facebook"
+          color="inherit"
+        >
           <FacebookIcon />
         </IconButton>
-        <IconButton aria-label="Instagram" color="inherit">
+        <IconButton
+          href="https://www.instagram.com/aeronpadvjt/"
+          aria-label="Instagram"
+          color="inherit"
+        >
           <InstagramIcon />
         </IconButton>
-        <IconButton aria-label="Twitter" color="inherit">
+        <IconButton
+          href="https://x.com/Kamalaya96"
+          aria-label="Twitter"
+          color="inherit"
+        >
           <TwitterIcon />
         </IconButton>
-        <IconButton aria-label="YouTube" color="inherit">
+        <IconButton
+          href="https://www.youtube.com/@aeronp8831"
+          aria-label="YouTube"
+          color="inherit"
+        >
           <YouTubeIcon />
         </IconButton>
       </Box>
 
       {/* Additional footer features */}
       <Typography variant="body2" color="inherit" mt={2}>
-        Connect with us:
+        Connect with me:
       </Typography>
       <Typography variant="body2" color="inherit">
-        Email: info@example.com
+        Email: admin@olsenaeron.com
       </Typography>
       <Typography variant="body2" color="inherit">
-        Phone: +1234567890
+        Phone: +639391160547
       </Typography>
     </Box>
   );

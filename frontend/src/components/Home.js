@@ -5,6 +5,7 @@ import HomeAvatar from "./HomeAvatar";
 import { Box, Container, Divider, Typography, Grid } from "@mui/material";
 import axiosInstance from "../Axios";
 import { useTheme } from "@mui/material/styles";
+import About from "../About";
 
 function Home() {
   const theme = useTheme();
@@ -72,6 +73,32 @@ function Home() {
                 isLoading={appState.loading}
                 posts={appState.posts}
               />
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Divider sx={{ my: 4, borderColor: theme.palette.primary.border }} />
+
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Box
+              sx={{
+                textAlign: "center",
+                padding: 0,
+                paddingLeft: 0,
+                background: theme.palette.primary.transparent,
+              }}
+            >
+              <Typography
+                variant="h1"
+                sx={{
+                  paddingTop: 3,
+                  fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" },
+                }}
+              >
+                About Me
+              </Typography>
+              <About />
             </Box>
           </Grid>
         </Grid>
