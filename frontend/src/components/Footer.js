@@ -74,9 +74,6 @@ function Footer() {
       <Typography variant="body2" color="inherit">
         Email: admin@olsenaeron.com
       </Typography>
-      <Typography variant="body2" color="inherit">
-        Phone: +639391160547
-      </Typography>
     </Box>
   );
 }

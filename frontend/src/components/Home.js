@@ -89,15 +89,6 @@ function Home() {
                 background: theme.palette.primary.transparent,
               }}
             >
-              <Typography
-                variant="h1"
-                sx={{
-                  paddingTop: 3,
-                  fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" },
-                }}
-              >
-                About Me
-              </Typography>
               <About />
             </Box>
           </Grid>

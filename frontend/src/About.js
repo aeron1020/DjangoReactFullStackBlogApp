@@ -17,6 +17,15 @@ function About() {
         color: theme.palette.text.primary, // Use primary text color
       }}
     >
+      <Typography
+        variant="h1"
+        sx={{
+          paddingTop: 3,
+          fontSize: { xs: "1.5rem", sm: "2rem", md: "3rem" },
+        }}
+      >
+        About Me
+      </Typography>
       <Typography variant="body1" paragraph>
         Welcome to my personal platform! This website is more than just a
         showcase of my projects; it’s a reflection of my journey, passions, and
