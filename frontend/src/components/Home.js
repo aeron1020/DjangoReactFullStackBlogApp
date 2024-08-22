@@ -79,7 +79,7 @@ function Home() {
 
         <Divider sx={{ my: 4, borderColor: theme.palette.primary.border }} />
 
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ paddingTop: 4, paddingBottom: 2 }}>
           <Grid item xs={12}>
             <Box
               sx={{

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Box, CircularProgress, Typography, useTheme } from "@mui/material";
 import axiosInstance from "../../Axios";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const ProjectDetails = ({ projectId }) => {
   const theme = useTheme();
@@ -136,9 +138,28 @@ const ProjectDetails = ({ projectId }) => {
 
   if (!selectedProject) {
     return (
-      <Typography variant="body1" color={theme.palette.primary.text}>
-        Select a project to see details
-      </Typography>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexDirection="column"
+        p={3}
+        borderRadius="8px"
+        bgcolor={theme.palette.background.default}
+        boxShadow={3}
+      >
+        <InfoOutlinedIcon
+          color={theme.palette.primary.text}
+          fontSize="large"
+          sx={{ mb: 2 }}
+        />
+        <Box display="flex" alignItems="center">
+          <ArrowBackIcon color={theme.palette.primary.text} sx={{ mr: 1 }} />
+          <Typography variant="h6" color={theme.palette.primary.text}>
+            Select a project to see details
+          </Typography>
+        </Box>
+      </Box>
     );
   }
 
