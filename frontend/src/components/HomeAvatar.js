@@ -166,9 +166,8 @@ function HomeAvatar() {
                 variant="body2"
                 sx={{ color: theme.palette.primary.text, textAlign: "left" }}
               >
-                I'm a self-taught web developer with expertise in front-end and
-                back-end technologies like HTML, CSS, JavaScript, React, Python,
-                and Django.
+                Welcome to my space! Dive into my journey of shared wins, ideas,
+                and life musings.
               </Typography>
             </Box>
           </Grid>
